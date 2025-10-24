@@ -11,14 +11,14 @@
     --shadow: rgba(0,0,0,0.25);
     --gold: #d4af37;
   }
-  *{box-sizing:border-box;margin:0;padding:0;user-select:none}
+  * { box-sizing:border-box; margin:0; padding:0; user-select:none; }
+
   body {
     background: var(--bg);
     height: 100vh;
     overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: grid;
+    place-items: center;
     font-family: 'Georgia', serif;
   }
 
@@ -27,6 +27,7 @@
     height: min(90vh, 1000px);
     perspective: 2000px;
     position: relative;
+    transform-style: preserve-3d;
   }
 
   .page {
@@ -35,11 +36,12 @@
     position: absolute;
     top: 0; left: 0;
     transform-origin: left;
-    transition: transform 0.8s ease;
+    transition: transform 0.9s cubic-bezier(0.45, 0.02, 0.35, 1);
     box-shadow: 0 8px 20px var(--shadow);
     border-radius: 8px;
     overflow: hidden;
     background: var(--bg);
+    will-change: transform;
   }
 
   .page img {
