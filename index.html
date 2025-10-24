@@ -33,9 +33,7 @@
       background: linear-gradient(to bottom, rgba(11,11,11,.85), rgba(11,11,11,.35), transparent);
       backdrop-filter: blur(8px);
     }
-    .brand{
-      display:flex; gap:10px; align-items:center; font-weight:700;
-    }
+    .brand{display:flex; gap:10px; align-items:center; font-weight:700;}
     .brand .logo{
       width:30px; height:30px; border-radius:8px;
       background: linear-gradient(135deg,#ff4d6d,#7c2d12);
@@ -45,41 +43,35 @@
     .brand .desc{font-size:11px; color:var(--muted)}
     .counter{
       font-size:12px; color:var(--muted);
-      padding:6px 10px; border-radius:999px; background:var(--glass); backdrop-filter: blur(var(--blur));
-      border:1px solid rgba(255,255,255,.08);
+      padding:6px 10px; border-radius:999px; background:var(--glass);
+      backdrop-filter: blur(var(--blur)); border:1px solid rgba(255,255,255,.08);
     }
 
     /* Slides */
     .slides{
       height:100dvh;
       scroll-snap-type:y mandatory;
-      overflow-y:auto;
-      overflow-x:hidden;
+      overflow-y:auto; overflow-x:hidden;
       scroll-behavior:smooth;
       -webkit-overflow-scrolling:touch;
     }
     .slide{
-      height:100dvh;
-      scroll-snap-align:start;
+      height:100dvh; scroll-snap-align:start;
       display:flex; align-items:center; justify-content:center;
       padding:20px;
     }
     .card{
       width:min(90vw,720px);
       height:min(90vh,1200px);
-      border-radius:18px;
-      overflow:hidden;
+      border-radius:18px; overflow:hidden;
       border:1px solid rgba(255,255,255,.1);
       box-shadow:0 20px 60px rgba(0,0,0,.6);
       background:#111;
       display:grid; grid-template-rows: 1fr auto;
     }
     .card img{
-      width:100%;
-      height:auto;
-      object-fit:contain;
-      display:block;
-      background:#000;
+      width:100%; height:auto; max-height:100%;
+      object-fit:contain; display:block; background:#000;
     }
     .caption{
       padding:14px 16px;
@@ -93,38 +85,23 @@
     /* Dots */
     .dots{
       position:fixed; right:10px; top:50%; transform:translateY(-50%);
-      display:flex; flex-direction:column; gap:8px;
-      z-index:5; background:rgba(0,0,0,.25);
-      padding:6px; border-radius:999px;
-      backdrop-filter:blur(8px);
-      border:1px solid rgba(255,255,255,.1);
+      display:flex; flex-direction:column; gap:8px; z-index:5;
+      background:rgba(0,0,0,.25); padding:6px; border-radius:999px;
+      backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,.1);
     }
-    .dot{
-      width:8px; height:8px; border-radius:50%;
-      background:var(--dot); cursor:pointer;
-      transition:.25s;
-    }
-    .dot.active{
-      background:var(--accent);
-      box-shadow:0 0 0 4px rgba(225,29,72,.2);
-      transform:scale(1.2);
-    }
+    .dot{ width:8px; height:8px; border-radius:50%; background:var(--dot); cursor:pointer; transition:.25s; }
+    .dot.active{ background:var(--accent); box-shadow:0 0 0 4px rgba(225,29,72,.2); transform:scale(1.2); }
 
     /* Controls */
     .controls{
       position:fixed; left:50%; transform:translateX(-50%);
       bottom:16px; display:flex; gap:10px;
-      background:var(--glass);
-      padding:8px; border-radius:999px;
-      backdrop-filter:blur(10px);
-      border:1px solid rgba(255,255,255,.08);
-      z-index:6;
+      background:var(--glass); padding:8px; border-radius:999px;
+      backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,.08); z-index:6;
     }
     .btn{
-      border:0; background:#161616;
-      border-radius:999px;
-      color:var(--fg); font-weight:700;
-      padding:10px 14px; cursor:pointer;
+      border:0; background:#161616; border-radius:999px;
+      color:var(--fg); font-weight:700; padding:10px 14px; cursor:pointer;
       border:1px solid rgba(255,255,255,.1);
     }
     .btn:active{transform:translateY(1px)}
@@ -154,7 +131,7 @@
     const images = [
       {src:"https://i.postimg.cc/281HL6Zv/1.jpg"},
       {src:"https://i.postimg.cc/d1Q6stF8/2.jpg"},
-      {src:"https://i.postimg.cc/v8qqm9cg/3.jpg"},
+      {src:"https://i.postimg.cc/DwMyf3Z8/3.jpg"},
       {src:"https://i.postimg.cc/ZqxjzvGC/4.jpg"},
       {src:"https://i.postimg.cc/XJNLj7WJ/5.jpg"},
       {src:"https://i.postimg.cc/N0kbv23g/6.jpg"},
