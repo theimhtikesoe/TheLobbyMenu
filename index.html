@@ -77,10 +77,13 @@
       display:grid; grid-template-rows: 1fr auto;
     }
     .card img{
-      width:100%; height:100%; object-fit:cover; display:block;
-      transition: transform .6s ease; transform:scale(1.01);
+      width:100%;
+      height:auto;
+      max-height:100%;
+      object-fit:contain;
+      display:block;
+      background:#000;
     }
-    .card:hover img{transform:scale(1.04)}
     .caption{
       padding:14px 16px;
       display:flex; align-items:center; justify-content:space-between;
@@ -143,7 +146,6 @@
   </header>
 
   <nav class="dots" id="dots"></nav>
-
   <main id="slides" class="slides"></main>
 
   <div class="controls">
@@ -153,14 +155,14 @@
 
   <script>
     const images = [
-      {src:"https://i.postimg.cc/TpXjZTQY/1.jpg"},
-      {src:"https://i.postimg.cc/B8yHN3X6/2.jpg"},
-      {src:"https://i.postimg.cc/Thbq7Kjf/3.jpg"},
-      {src:"https://i.postimg.cc/QBVcpCx3/4.jpg"},
-      {src:"https://i.postimg.cc/yJ5cnKk4/5.jpg"},
-      {src:"https://i.postimg.cc/t17FhJRf/6.jpg"},
-      {src:"https://i.postimg.cc/R38KGmNM/7.jpg"},
-      {src:"https://i.postimg.cc/Tyhnr1YX/8.jpg"}
+      {src:"https://drive.google.com/uc?id=1G3RlJbPgvP2yo_s_UOEJVyrBJpnYWjjj"},
+      {src:"https://drive.google.com/uc?id=1LZeTptQYnAWyGh1SCjwHwLFgfLLgktCz"},
+      {src:"https://drive.google.com/uc?id=149cKcm06Y3mYuws-Z5aZcrQQFiXZLpJX"},
+      {src:"https://drive.google.com/uc?id=1pt6WJpMOtUG2AeICtBT85HqmVZBuZsj5"},
+      {src:"https://drive.google.com/uc?id=1f3Mvn8pzg0HEM5_FNCn5qC9nZVhicEUS"},
+      {src:"https://drive.google.com/uc?id=1cYGHrLsUKDe7MUq1NC7uDv2cLFP1MD5R"},
+      {src:"https://drive.google.com/uc?id=1QBNr_OYLKiZcnsYX7BqB_qxjhBu4uqPf"},
+      {src:"https://drive.google.com/uc?id=1Ho8Oy3nn1d335juGG_eUkACNHV0TzYyT"}
     ];
 
     const slidesEl=document.getElementById('slides');
