@@ -155,12 +155,7 @@
       img.alt=`Menu ${i+1}`;
       img.loading='lazy';
       card.appendChild(img);
-      const cap=document.createElement('div');
-      cap.className='caption';
-      cap.innerHTML=`<h3>Menu Item ${i+1}</h3><p>#${String(i+1).padStart(2,'0')}</p>`;
-      card.appendChild(cap);
-      sec.appendChild(card);
-      slidesEl.appendChild(sec);
+  
 
       const dot=document.createElement('div');
       dot.className='dot';
