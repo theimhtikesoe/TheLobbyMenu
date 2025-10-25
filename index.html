@@ -4,19 +4,18 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <title>The Lobby Bar and Bed - Menu</title>
-<meta name="theme-color" content="#ffffff" />
+<meta name="theme-color" content="#e8dcb4" />
 <style>
   :root {
-    --bg: #ffffff;        /* changed to pure white for clean blend */
-    --frame: #f5e9c8;     /* subtle warm frame tone */
+    --bg: #e8dcb4; /* warm gold-beige base */
     --gold: #d4af37;
-    --shadow: rgba(0,0,0,0.25);
+    --shadow: rgba(0,0,0,0.3);
   }
 
   * { box-sizing:border-box; margin:0; padding:0; user-select:none; }
 
   body {
-    background: var(--frame);
+    background: var(--bg);
     height: 100vh;
     width: 100vw;
     overflow: hidden;
@@ -33,9 +32,9 @@
     align-items: center;
     width: min(90vw, 700px);
     height: min(90vh, 1000px);
-    border-radius: 12px;
-    background: var(--bg);
-    box-shadow: 0 0 40px rgba(0,0,0,0.2);
+    border-radius: 16px;
+    box-shadow: 0 0 50px rgba(0,0,0,0.25);
+    background: transparent;
   }
 
   .book {
@@ -53,19 +52,22 @@
     top: 0; left: 0;
     transform-origin: left;
     transition: transform 0.9s cubic-bezier(0.45, 0.02, 0.35, 1);
-    border-radius: 8px;
-    overflow: hidden;
-    background: var(--bg);
     box-shadow: 0 8px 20px var(--shadow);
+    border-radius: 16px;
+    overflow: hidden;
+    background: transparent;
     will-change: transform;
     backface-visibility: hidden;
   }
 
+  /* 🧠 Magic part: make white transparent & black stay */
   .page img {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    background: var(--bg);
+    mix-blend-mode: multiply;
+    filter: brightness(1.05) contrast(1.1);
+    background: transparent;
   }
 
   .page.flipped {
@@ -78,17 +80,18 @@
     position: absolute;
     top: -10px; left: -10px; right: -10px; bottom: -10px;
     border: 2px solid var(--gold);
-    border-radius: 12px;
-    box-shadow: 0 0 15px rgba(212,175,55,0.4);
+    border-radius: 18px;
+    box-shadow: 0 0 25px rgba(212,175,55,0.4);
     pointer-events: none;
   }
 
+  /* Navigation buttons */
   .nav-btn {
     position: fixed;
     top: 50%;
     transform: translateY(-50%);
     background: rgba(212,175,55,0.25);
-    border: 1px solid rgba(212,175,55,0.7);
+    border: 1px solid rgba(212,175,55,0.6);
     color: #3b2f00;
     width: 48px; height: 48px;
     border-radius: 50%;
@@ -130,7 +133,7 @@ const images = [
 ];
 
 const book = document.getElementById('book');
-images.forEach((src, i) => {
+images.forEach(src => {
   const page = document.createElement('div');
   page.className = 'page';
   const img = document.createElement('img');
@@ -157,7 +160,7 @@ document.getElementById('prevBtn').onclick = () => {
   if (current > 0) { current--; showPage(current); }
 };
 
-/* Swipe gestures */
+/* Swipe gestures for mobile */
 let startX = 0;
 book.addEventListener('touchstart', e => startX = e.touches[0].clientX);
 book.addEventListener('touchend', e => {
