@@ -11,59 +11,49 @@
     --gold: #d4af37;
     --shadow: rgba(0,0,0,0.25);
   }
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    user-select: none;
-  }
+  * { box-sizing:border-box; margin:0; padding:0; user-select:none; }
 
-  html, body {
-    height: 100%;
-    width: 100%;
+  body {
     background: var(--bg);
+    height: 100vh;
+    width: 100vw;
     overflow: hidden;
     font-family: 'Georgia', serif;
   }
 
-  /* keep everything perfectly centered */
+  /* Fixed container to stop global layout movement */
   .stage {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: min(90vw, 700px);
-    height: min(90vh, 1000px);
+    position: fixed;
+    top: 50%; left: 50%;
     transform: translate(-50%, -50%);
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
-    will-change: transform;
-    contain: layout paint;
+    width: min(90vw, 700px);
+    height: min(90vh, 1000px);
   }
 
   .book {
-    position: relative;
     width: 100%;
     height: 100%;
     perspective: 2000px;
     transform-style: preserve-3d;
-    overflow: visible;
+    position: relative;
   }
 
   .page {
-    position: absolute;
     width: 100%;
     height: 100%;
+    position: absolute;
     top: 0; left: 0;
     transform-origin: left;
-    transition: transform 1s cubic-bezier(0.45, 0.02, 0.35, 1);
+    transition: transform 0.9s cubic-bezier(0.45, 0.02, 0.35, 1);
     box-shadow: 0 8px 20px var(--shadow);
     border-radius: 8px;
     overflow: hidden;
     background: var(--bg);
-    backface-visibility: hidden;
     will-change: transform;
+    backface-visibility: hidden;
   }
 
   .page img {
@@ -78,7 +68,6 @@
     box-shadow: none;
   }
 
-  /* Border decoration */
   .book::before {
     content: "";
     position: absolute;
@@ -89,7 +78,7 @@
     pointer-events: none;
   }
 
-  /* Navigation buttons */
+  /* Navigation */
   .nav-btn {
     position: fixed;
     top: 50%;
@@ -136,7 +125,7 @@ const images = [
 ];
 
 const book = document.getElementById('book');
-images.forEach((src) => {
+images.forEach((src, i) => {
   const page = document.createElement('div');
   page.className = 'page';
   const img = document.createElement('img');
@@ -156,7 +145,6 @@ function showPage(index) {
   });
 }
 
-/* Controls */
 document.getElementById('nextBtn').onclick = () => {
   if (current < total) { current++; showPage(current); }
 };
@@ -164,7 +152,7 @@ document.getElementById('prevBtn').onclick = () => {
   if (current > 0) { current--; showPage(current); }
 };
 
-/* Swipe Gesture */
+/* Swipe gestures */
 let startX = 0;
 book.addEventListener('touchstart', e => startX = e.touches[0].clientX);
 book.addEventListener('touchend', e => {
