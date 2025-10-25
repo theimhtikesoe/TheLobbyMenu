@@ -20,12 +20,10 @@
       --border-radius-lg: 16px;
     }
 
-    /* Basic Reset & Global Styles */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      /* user-select: none; /* Removed for better accessibility, allow text selection if content is not just images */
     }
 
     body {
@@ -40,88 +38,75 @@
       color: var(--text-color);
     }
 
-    /* Stage for the book */
     .stage {
       position: relative;
       width: min(90vw, 700px);
       height: auto;
-      aspect-ratio: 17 / 19; /* Matches your menu’s shape */
+      aspect-ratio: 17 / 19;
       display: flex;
       justify-content: center;
       align-items: center;
       background: transparent;
-      perspective: 2000px; /* Added perspective to the stage for better 3D effect */
+      perspective: 2000px;
     }
 
-    /* Book Container */
     .book {
       width: 100%;
       height: 100%;
       position: relative;
       transform-style: preserve-3d;
-      cursor: grab; /* Indicate it's draggable/interactive */
+      cursor: grab;
     }
 
     .book:active {
       cursor: grabbing;
     }
 
-    /* Individual Page Styling */
     .page {
       position: absolute;
       inset: 0;
-      transform-origin: left center; /* Ensure rotation from the left edge */
+      transform-origin: left center;
       transition: transform var(--page-transition-duration) var(--page-transition-timing);
       border-radius: var(--border-radius-md);
       overflow: hidden;
-       /* Default page background */
       box-shadow: 0 8px 25px var(--shadow);
-      backface-visibility: hidden; /* Hide the back of the page during flip */
+      backface-visibility: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
-      cursor: pointer; /* Indicate pages are clickable */
-      outline: none; /* Remove default outline, add custom focus style */
-    }
-
-    .page:focus-visible {
-      outline: 2px solid var(--gold-dark);
-      outline-offset: 2px;
+      cursor: pointer;
     }
 
     .page img {
       width: 100%;
       height: 100%;
       object-fit: contain;
-      mix-blend-mode: multiply; /* Good for paper texture effect */
+      mix-blend-mode: multiply;
       filter: brightness(1.05) contrast(1.1);
       display: block;
-      pointer-events: none; /* Prevent image from interfering with page click */
+      pointer-events: none;
     }
 
-    /* Flipped Page State */
     .page.flipped {
       transform: rotateY(-180deg);
-      box-shadow: none; /* Remove shadow on flipped side */
+      box-shadow: none;
     }
 
-    /* Book Spine Effect */
     .book::before {
       content: "";
       position: absolute;
       top: -10px;
       bottom: -10px;
-      left: -10px; /* Extend slightly beyond the book */
-      width: 20px; /* Width of the spine */
+      left: -10px;
+      width: 20px;
       background: linear-gradient(to right, var(--gold-dark), var(--gold), var(--gold-dark));
       border-radius: var(--border-radius-lg);
       box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
       pointer-events: none;
-      z-index: -1; /* Place behind pages */
-      transform: translateX(-50%); /* Center the spine relative to the book's left edge */
+      z-index: -1;
+      transform: translateX(-50%);
     }
 
-    /* Navigation buttons */
     .nav-btn {
       position: fixed;
       top: 50%;
@@ -141,8 +126,6 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      -webkit-appearance: none; /* Remove default button styles for consistency */
-      appearance: none;
     }
 
     .nav-btn:hover:not(:disabled) {
@@ -150,125 +133,63 @@
       box-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
     }
 
-    .nav-btn:focus-visible {
-      outline: 2px solid var(--gold-dark);
-      outline-offset: 2px;
-    }
-
     .nav-btn:disabled {
       opacity: 0.5;
       cursor: not-allowed;
     }
 
-    #prevBtn {
-      left: 20px;
-    }
+    #prevBtn { left: 20px; }
+    #nextBtn { right: 20px; }
 
-    #nextBtn {
-      right: 20px;
-    }
-
-    /* Loading Spinner */
-    .loading-spinner {
-      border: 4px solid rgba(0, 0, 0, 0.1);
-      border-top: 4px solid var(--gold);
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 10;
-    }
-
-    @keyframes spin {
-      0% { transform: translate(-50%, -50%) rotate(0deg); }
-      100% { transform: translate(-50%, -50%) rotate(360deg); }
-    }
-
-    /* Responsive Adjustments */
     @media (max-width: 768px) {
-      .stage {
-        width: 95vw;
-        aspect-ratio: 17/19;
+      .stage { width: 95vw; aspect-ratio: 17 / 19; }
+      #prevBtn, #nextBtn {
+        width: 40px; height: 40px; font-size: 20px;
       }
-      #prevBtn {
-        left: 10px;
-        width: 40px;
-        height: 40px;
-        font-size: 20px;
-      }
-      #nextBtn {
-        right: 10px;
-        width: 40px;
-        height: 40px;
-        font-size: 20px;
-      }
+      #prevBtn { left: 10px; }
+      #nextBtn { right: 10px; }
     }
   </style>
 </head>
 <body>
 
   <div class="stage">
-    <div class="book" id="book" role="document" aria-label="Interactive book with menu pages"></div>
+    <div class="book" id="book"></div>
   </div>
 
-  <button id="prevBtn" class="nav-btn" aria-label="Previous page">‹</button>
-  <button id="nextBtn" class="nav-btn" aria-label="Next page">›</button>
+  <button id="prevBtn" class="nav-btn">‹</button>
+  <button id="nextBtn" class="nav-btn">›</button>
 
   <script>
     class FlipBook {
-      constructor(bookElementId, prevBtnId, nextBtnId, spinnerId, images) {
+      constructor(bookElementId, prevBtnId, nextBtnId, images) {
         this.book = document.getElementById(bookElementId);
         this.prevBtn = document.getElementById(prevBtnId);
         this.nextBtn = document.getElementById(nextBtnId);
-        this.spinner = document.getElementById(spinnerId);
         this.images = images;
         this.pages = [];
         this.currentPageIndex = 0;
-        this.isMoving = false; // For swipe gesture
-        this.startX = 0; // For swipe gesture
-        this.swipeThreshold = 80; // Pixels to trigger a swipe
-
+        this.isMoving = false;
+        this.startX = 0;
+        this.swipeThreshold = 80;
         this.init();
       }
 
       async init() {
-        this.showSpinner();
         await this.preloadImages();
-        this.hideSpinner();
         this.createPages();
         this.addEventListeners();
         this.updatePageDisplay();
         this.updateNavigationButtons();
       }
 
-      showSpinner() {
-        if (this.spinner) {
-          this.spinner.style.display = 'block';
-        }
-      }
-
-      hideSpinner() {
-        if (this.spinner) {
-          this.spinner.style.display = 'none';
-        }
-      }
-
       async preloadImages() {
-        const promises = this.images.map(src => {
-          return new Promise((resolve, reject) => {
-            const img = new Image();
-            img.src = src;
-            img.onload = resolve;
-            img.onerror = () => {
-              console.error(`Failed to load image: ${src}`);
-              resolve(); // Resolve even on error to not block the book from loading
-            };
-          });
-        });
+        const promises = this.images.map(src => new Promise(resolve => {
+          const img = new Image();
+          img.src = src;
+          img.onload = resolve;
+          img.onerror = resolve;
+        }));
         await Promise.all(promises);
       }
 
@@ -276,13 +197,9 @@
         this.images.forEach((src, index) => {
           const page = document.createElement('div');
           page.className = 'page';
-          page.setAttribute('tabindex', '0'); // Make pages focusable
-          page.setAttribute('role', 'img'); // Indicate it's an image
-          page.setAttribute('aria-label', `Page ${index + 1} of the menu`);
-
           const img = document.createElement('img');
           img.src = src;
-          img.alt = `Menu page ${index + 1}`; // Alt text for accessibility
+          img.alt = `Menu page ${index + 1}`;
           page.appendChild(img);
           this.book.appendChild(page);
           this.pages.push(page);
@@ -292,35 +209,18 @@
       addEventListeners() {
         this.prevBtn.addEventListener('click', () => this.goToPrevPage());
         this.nextBtn.addEventListener('click', () => this.goToNextPage());
-
-        this.pages.forEach((page, index) => {
-          page.addEventListener('click', () => {
-            if (index === this.currentPageIndex && index < this.pages.length - 1) {
-              this.goToNextPage();
-            }
-          });
-        });
-
-        // Keyboard navigation
-        document.addEventListener('keydown', (e) => {
-          if (e.key === 'ArrowLeft') {
-            this.goToPrevPage();
-          } else if (e.key === 'ArrowRight') {
-            this.goToNextPage();
+        this.book.addEventListener('touchstart', e => this.startX = e.touches[0].clientX);
+        this.book.addEventListener('touchend', e => {
+          const diffX = e.changedTouches[0].clientX - this.startX;
+          if (Math.abs(diffX) > this.swipeThreshold) {
+            diffX < 0 ? this.goToNextPage() : this.goToPrevPage();
           }
         });
-
-        // Swipe gestures
-        this.book.addEventListener('touchstart', this.handleTouchStart.bind(this));
-        this.book.addEventListener('touchmove', this.handleTouchMove.bind(this));
-        this.book.addEventListener('touchend', this.handleTouchEnd.bind(this));
       }
 
       updatePageDisplay() {
         this.pages.forEach((page, i) => {
-          // Set z-index to ensure correct stacking order for flipping
           page.style.zIndex = this.pages.length - i;
-          // Apply 'flipped' class if the page index is less than the current page index
           page.classList.toggle('flipped', i < this.currentPageIndex);
         });
       }
@@ -345,33 +245,8 @@
           this.updateNavigationButtons();
         }
       }
-
-      handleTouchStart(e) {
-        this.startX = e.touches[0].clientX;
-        this.isMoving = true;
-      }
-
-      handleTouchMove(e) {
-        if (!this.isMoving) return;
-        const currentX = e.touches[0].clientX;
-        const diffX = currentX - this.startX;
-
-        if (Math.abs(diffX) > this.swipeThreshold) {
-          if (diffX < 0) { // Swiped left
-            this.goToNextPage();
-          } else { // Swiped right
-            this.goToPrevPage();
-          }
-          this.isMoving = false; // Reset after a successful swipe
-        }
-      }
-
-      handleTouchEnd() {
-        this.isMoving = false;
-      }
     }
 
-    // Initialize the FlipBook
     const menuImages = [
       "https://i.postimg.cc/WpKf585z/1.png",
       "https://i.postimg.cc/rybYfjfm/2.png",
@@ -384,7 +259,7 @@
     ];
 
     document.addEventListener('DOMContentLoaded', () => {
-      new FlipBook('book', 'prevBtn', 'nextBtn', 'loading-spinner', menuImages);
+      new FlipBook('book', 'prevBtn', 'nextBtn', menuImages);
     });
   </script>
 
