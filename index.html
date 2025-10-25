@@ -38,11 +38,12 @@
       color: var(--text-color);
     }
 
+    /* --- Stage (updated ratio) --- */
     .stage {
       position: relative;
       width: min(90vw, 700px);
       height: auto;
-      aspect-ratio: 17 / 19;
+      aspect-ratio: 2208 / 2244; /* Updated ratio matching your new image */
       display: flex;
       justify-content: center;
       align-items: center;
@@ -141,8 +142,18 @@
     #prevBtn { left: 20px; }
     #nextBtn { right: 20px; }
 
+    /* --- Custom Arched Top Shape --- */
+    .custom-shape {
+      clip-path: path('M 0 100 L 0 15 C 0 5, 10 0, 20 0 L 80 0 C 90 0, 100 5, 100 15 L 100 100 Z');
+    }
+
+    .book,
+    .page {
+      clip-path: path('M 0 100 L 0 15 C 0 5, 10 0, 20 0 L 80 0 C 90 0, 100 5, 100 15 L 100 100 Z');
+    }
+
     @media (max-width: 768px) {
-      .stage { width: 95vw; aspect-ratio: 17 / 19; }
+      .stage { width: 95vw; aspect-ratio: 2208 / 2244; }
       #prevBtn, #nextBtn {
         width: 40px; height: 40px; font-size: 20px;
       }
@@ -154,7 +165,7 @@
 <body>
 
   <div class="stage">
-    <div class="book" id="book"></div>
+    <div class="book custom-shape" id="book"></div>
   </div>
 
   <button id="prevBtn" class="nav-btn">‹</button>
@@ -196,7 +207,7 @@
       createPages() {
         this.images.forEach((src, index) => {
           const page = document.createElement('div');
-          page.className = 'page';
+          page.className = 'page custom-shape';
           const img = document.createElement('img');
           img.src = src;
           img.alt = `Menu page ${index + 1}`;
