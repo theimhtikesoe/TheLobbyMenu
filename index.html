@@ -31,17 +31,18 @@
     justify-content: center;
     align-items: center;
     max-width: 700px;
-    height: auto;
     border-radius: 16px;
     background: transparent;
     touch-action: none;
+    overflow: hidden;
   }
 
   .book {
     width: 100%;
+    position: relative;
     perspective: 2000px;
     transform-style: preserve-3d;
-    position: relative;
+    transition: transform 0.3s ease;
   }
 
   .page {
@@ -65,8 +66,6 @@
     mix-blend-mode: multiply;
     filter: brightness(1.05) contrast(1.1);
     background: transparent;
-    transform-origin: center center;
-    transition: transform 0.25s ease;
   }
 
   .page.flipped {
@@ -137,6 +136,10 @@ images.forEach(src => {
   page.className = 'page';
   const img = document.createElement('img');
   img.src = src;
+  img.onload = () => {
+    const stage = document.getElementById('stage');
+    stage.style.height = img.height + 'px';
+  };
   page.appendChild(img);
   book.appendChild(page);
 });
@@ -159,7 +162,7 @@ document.getElementById('prevBtn').onclick = () => {
   if (current > 0) { current--; showPage(current); }
 };
 
-/* Smooth swipe gesture */
+/* Swipe gestures */
 let startX = 0, isMoving = false;
 book.addEventListener('touchstart', e => { startX = e.touches[0].clientX; isMoving = true; });
 book.addEventListener('touchmove', e => {
@@ -173,23 +176,23 @@ book.addEventListener('touchmove', e => {
 });
 book.addEventListener('touchend', () => { isMoving = false; });
 
-/* Manual zoom (pinch + double-tap) */
-let scale = 1, lastTouchDist = 0, lastTap = 0;
+/* Zoom gestures */
+let scale = 1, lastDist = 0, lastTap = 0;
 const stage = document.getElementById('stage');
 
-function getDist(touches) {
+function distance(touches) {
   const [a, b] = touches;
   return Math.hypot(b.clientX - a.clientX, b.clientY - a.clientY);
 }
 
 stage.addEventListener('touchstart', e => {
   if (e.touches.length === 2) {
-    lastTouchDist = getDist(e.touches);
+    lastDist = distance(e.touches);
   } else if (e.touches.length === 1) {
     const now = Date.now();
     if (now - lastTap < 300) {
       scale = scale === 1 ? 2 : 1;
-      stage.style.transform = `scale(${scale})`;
+      book.style.transform = `scale(${scale})`;
     }
     lastTap = now;
   }
@@ -198,15 +201,13 @@ stage.addEventListener('touchstart', e => {
 stage.addEventListener('touchmove', e => {
   if (e.touches.length === 2) {
     e.preventDefault();
-    const dist = getDist(e.touches);
-    const delta = dist / lastTouchDist;
+    const dist = distance(e.touches);
+    const delta = dist / lastDist;
     scale = Math.min(Math.max(scale * delta, 1), 2);
-    stage.style.transform = `scale(${scale})`;
-    lastTouchDist = dist;
+    book.style.transform = `scale(${scale})`;
+    lastDist = dist;
   }
 });
-
-showPage(0);
 </script>
 
 </body>
