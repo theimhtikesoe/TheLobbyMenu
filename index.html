@@ -1,202 +1,190 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>The Lobby Bar and Bed - Interactive Menu</title>
-<meta name="theme-color" content="#f5e9c8" />
-<style>
-:root {
-  --bg: #f5e9c8;
-  --gold: #d4af37;
-  --shadow: rgba(0,0,0,0.3);
-  --paper: #fff9e9;
-}
-*{box-sizing:border-box;margin:0;padding:0;user-select:none;}
-html,body{
-  height:100%;width:100%;
-  overflow:hidden;
-  background: radial-gradient(circle at center, var(--bg), #e3d6a3);
-  font-family:'Georgia',serif;
-}
-.stage{
-  position:absolute;
-  top:50%;left:50%;
-  transform:translate(-50%,-50%);
-  width:min(90vw,750px);
-  height:min(90vh,1000px);
-  perspective:2200px;
-  display:flex;justify-content:center;align-items:center;
-}
-.book{
-  position:relative;
-  width:100%;height:100%;
-  transform-style:preserve-3d;
-  background:linear-gradient(145deg,#f9f0d5 0%,#f2e6b8 100%);
-  border:2px solid var(--gold);
-  border-radius:12px;
-  box-shadow:0 40px 60px rgba(0,0,0,.35);
-}
-.page{
-  position:absolute;
-  width:100%;height:100%;
-  top:0;left:0;
-  transform-origin:left center;
-  transform-style:preserve-3d;
-  transition:transform 1.2s cubic-bezier(.45,.02,.25,1);
-  border-radius:10px;
-  box-shadow:0 8px 25px var(--shadow);
-  background:var(--paper);
-  backface-visibility:hidden;
-  overflow:hidden;
-}
-.page img{
-  width:100%;height:100%;
-  object-fit:contain;
-  background:var(--paper);
-  filter:brightness(.98) contrast(1.05);
-}
-.page.flipped{
-  transform:rotateY(-180deg);
-}
-.book::after{
-  content:"";
-  position:absolute;left:50%;top:0;bottom:0;width:5px;
-  background:linear-gradient(to right,rgba(0,0,0,.2),rgba(255,255,255,.1));
-  transform:translateX(-50%);
-  border-radius:2px;
-}
-/* NAV BUTTONS */
-.nav-btn{
-  position:fixed;top:50%;
-  transform:translateY(-50%);
-  background:rgba(212,175,55,.2);
-  border:1px solid rgba(212,175,55,.6);
-  color:#3b2f00;
-  width:54px;height:54px;border-radius:50%;
-  font-size:28px;font-weight:bold;
-  cursor:pointer;z-index:50;
-  backdrop-filter:blur(6px);
-  transition:.25s;
-}
-.nav-btn:hover{
-  background:rgba(212,175,55,.35);
-  transform:translateY(-50%) scale(1.05);
-}
-#prevBtn{left:30px;}#nextBtn{right:30px;}
-/* ZOOM GLASS */
-.magnifier {
-  position:absolute;
-  border:2px solid var(--gold);
-  border-radius:50%;
-  cursor:none;
-  width:150px;
-  height:150px;
-  overflow:hidden;
-  box-shadow:0 0 10px rgba(0,0,0,0.3);
-  display:none;
-  z-index:99;
-}
-.magnifier img {
-  position:absolute;
-  width:200%;
-  height:auto;
-  transform-origin:top left;
-}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>The Lobby Bar and Bed - Menu</title>
+  <meta name="theme-color" content="#0b0b0b" />
+  <style>
+    :root{
+      --bg:#0b0b0b;
+      --fg:#f4f4f4;
+      --muted:#9aa0a6;
+      --accent:#e11d48;
+      --dot:#3a3a3a;
+      --glass: rgba(255,255,255,.06);
+      --blur: 12px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background: radial-gradient(1200px 800px at 70% -10%, #1a1a1a 0%, #0b0b0b 55%) fixed;
+      color:var(--fg);
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      overscroll-behavior-y: contain;
+    }
+
+    .topbar{
+      position:sticky; top:0; z-index:10;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:12px 16px;
+      background: linear-gradient(to bottom, rgba(11,11,11,.85), rgba(11,11,11,.35), transparent);
+      backdrop-filter: blur(8px);
+    }
+    .brand{
+      display:flex; gap:10px; align-items:center; font-weight:700;
+    }
+    .brand .logo{
+      width:30px; height:30px; border-radius:8px;
+      background: linear-gradient(135deg,#ff4d6d,#7c2d12);
+      box-shadow: 0 0 0 2px rgba(255,255,255,.06) inset, 0 6px 20px rgba(255,77,109,.25);
+    }
+    .brand .name{font-size:14px;}
+    .brand .desc{font-size:11px; color:var(--muted)}
+    .counter{
+      font-size:12px; color:var(--muted);
+      padding:6px 10px; border-radius:999px; background:var(--glass); backdrop-filter: blur(var(--blur));
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .slides{
+      height:100dvh;
+      scroll-snap-type:y mandatory;
+      overflow-y:auto;
+      overflow-x:hidden;
+      scroll-behavior:smooth;
+      -webkit-overflow-scrolling:touch;
+    }
+    .slide{
+      height:100dvh;
+      scroll-snap-align:start;
+      display:flex; align-items:center; justify-content:center;
+      padding:20px;
+    }
+    .card{
+      width:min(90vw,720px);
+      height:min(90vh,1200px);
+      border-radius:18px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.1);
+      box-shadow:0 20px 60px rgba(0,0,0,.6);
+      background:#111;
+      display:grid; grid-template-rows: 1fr auto;
+    }
+    .card img{
+      width:100%;
+      height:auto;
+      object-fit:contain;
+      display:block;
+      background:#000;
+    }
+    .caption{
+      padding:14px 16px;
+      display:flex; align-items:center; justify-content:space-between;
+      background:linear-gradient(to top,rgba(0,0,0,.55),rgba(0,0,0,.25));
+      border-top:1px solid rgba(255,255,255,.05);
+    }
+    .caption h3{margin:0;font-size:15px}
+    .caption p{margin:0;font-size:12px;color:var(--muted)}
+
+    .dots{
+      position:fixed; right:10px; top:50%; transform:translateY(-50%);
+      display:flex; flex-direction:column; gap:8px;
+      z-index:5; background:rgba(0,0,0,.25);
+      padding:6px; border-radius:999px;
+      backdrop-filter:blur(8px);
+      border:1px solid rgba(255,255,255,.1);
+    }
+    .dot{
+      width:8px; height:8px; border-radius:50%;
+      background:var(--dot); cursor:pointer;
+      transition:.25s;
+    }
+    .dot.active{
+      background:var(--accent);
+      box-shadow:0 0 0 4px rgba(225,29,72,.2);
+      transform:scale(1.2);
+    }
+  </style>
 </head>
 <body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo"></div>
+      <div>
+        <div class="name">The Lobby Bar and Bed</div>
+        <div class="desc">Swipe up • Explore our menu</div>
+      </div>
+    </div>
+    <div class="counter" id="counter">1 / 8</div>
+  </header>
 
-<div class="stage">
-  <div class="book" id="book"></div>
-  <div class="magnifier" id="magnifier"><img id="zoomImg" src=""></div>
-</div>
-<button id="prevBtn" class="nav-btn">‹</button>
-<button id="nextBtn" class="nav-btn">›</button>
+  <nav class="dots" id="dots"></nav>
+  <main id="slides" class="slides"></main>
 
-<script>
-const images=[
- "https://i.postimg.cc/281HL6Zv/1.jpg",
- "https://i.postimg.cc/d1Q6stF8/2.jpg",
- "https://i.postimg.cc/DwMyf3Z8/3.jpg",
- "https://i.postimg.cc/ZqxjzvGC/4.jpg",
- "https://i.postimg.cc/XJNLj7WJ/5.jpg",
- "https://i.postimg.cc/N0kbv23g/6.jpg",
- "https://i.postimg.cc/4d4PfNGh/7.jpg",
- "https://i.postimg.cc/R0LGxJkq/8.jpg"
-];
+  <script>
+    const images = [
+      {src:"https://i.postimg.cc/281HL6Zv/1.jpg"},
+      {src:"https://i.postimg.cc/d1Q6stF8/2.jpg"},
+      {src:"https://drive.google.com/uc?id=1nHawHnnlvmTUdeCEDyWQ-X8jSCesOBUM"},
+      {src:"https://i.postimg.cc/ZqxjzvGC/4.jpg"},
+      {src:"https://i.postimg.cc/XJNLj7WJ/5.jpg"},
+      {src:"https://i.postimg.cc/N0kbv23g/6.jpg"},
+      {src:"https://i.postimg.cc/4d4PfNGh/7.jpg"},
+      {src:"https://i.postimg.cc/R0LGxJkq/8.jpg"}
+    ];
 
-const book=document.getElementById('book');
-images.forEach((src)=>{
- const p=document.createElement('div');
- p.className='page';
- const i=document.createElement('img');
- i.src=src;
- i.loading="lazy";
- p.appendChild(i);
- book.appendChild(p);
-});
+    const slidesEl=document.getElementById('slides');
+    const dotsEl=document.getElementById('dots');
+    const counterEl=document.getElementById('counter');
+    const total=images.length;
+    let active=0;
 
-let current=0,isDragging=false,startX=0,rotation=0;
-const pages=document.querySelectorAll('.page');
-const total=pages.length;
+    images.forEach((imgData,i)=>{
+      const sec=document.createElement('section');
+      sec.className='slide';
+      const card=document.createElement('div');
+      card.className='card';
+      const img=document.createElement('img');
+      img.src=imgData.src;
+      img.alt=`Menu ${i+1}`;
+      img.loading='lazy';
+      card.appendChild(img);
+      const cap=document.createElement('div');
+      cap.className='caption';
+      cap.innerHTML=`<h3>Menu Item ${i+1}</h3><p>#${String(i+1).padStart(2,'0')}</p>`;
+      card.appendChild(cap);
+      sec.appendChild(card);
+      slidesEl.appendChild(sec);
 
-function showPage(idx){
- pages.forEach((p,i)=>{
-   p.style.zIndex=total-i;
-   p.classList.toggle('flipped',i<idx);
- });
-}
-document.getElementById('nextBtn').onclick=()=>{if(current<total){current++;showPage(current);}};
-document.getElementById('prevBtn').onclick=()=>{if(current>0){current--;showPage(current);}};
+      const dot=document.createElement('div');
+      dot.className='dot';
+      dot.addEventListener('click',()=>slidesEl.children[i].scrollIntoView({behavior:'smooth'}));
+      dotsEl.appendChild(dot);
+    });
 
-/* --- Touch/Drag Page Flip --- */
-book.addEventListener('pointerdown',e=>{
- isDragging=true;startX=e.clientX;
-});
-book.addEventListener('pointermove',e=>{
- if(!isDragging)return;
- const delta=(e.clientX-startX)/book.clientWidth;
- const angle=Math.max(Math.min(delta*180,0),-180);
- const currentPage=pages[current];
- if(currentPage) currentPage.style.transform=`rotateY(${angle}deg)`;
-});
-book.addEventListener('pointerup',e=>{
- if(!isDragging)return;isDragging=false;
- const delta=(e.clientX-startX)/book.clientWidth;
- if(delta<-0.2 && current<total){current++;showPage(current);}
- else if(delta>0.2 && current>0){current--;showPage(current);}
- else showPage(current);
-});
+    const updateUI=(idx)=>{
+      active=Math.max(0,Math.min(idx,total-1));
+      counterEl.textContent=`${active+1} / ${total}`;
+      Array.from(dotsEl.children).forEach((d,i)=>d.classList.toggle('active',i===active));
+    };
 
-/* --- Magnifier Lens --- */
-const magnifier=document.getElementById('magnifier');
-const zoomImg=document.getElementById('zoomImg');
-let zoomActive=false;
+    const io=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          const idx=Array.from(slidesEl.children).indexOf(e.target);
+          updateUI(idx);
+        }
+      });
+    },{root:slidesEl,threshold:0.6});
+    Array.from(slidesEl.children).forEach(sl=>io.observe(sl));
 
-book.addEventListener('dblclick',e=>{
-  const activePage=pages[current]||pages[current-1];
-  if(!activePage)return;
-  const img=activePage.querySelector('img');
-  zoomImg.src=img.src;
-  zoomActive=!zoomActive;
-  magnifier.style.display=zoomActive?'block':'none';
-});
-book.addEventListener('mousemove',e=>{
-  if(!zoomActive)return;
-  const rect=book.getBoundingClientRect();
-  const x=e.clientX-rect.left,y=e.clientY-rect.top;
-  const zoom=2;
-  const lens=magnifier;
-  lens.style.left=(e.pageX-lens.offsetWidth/2)+'px';
-  lens.style.top=(e.pageY-lens.offsetHeight/2)+'px';
-  zoomImg.style.left=(-x*zoom+lens.offsetWidth/2)+'px';
-  zoomImg.style.top=(-y*zoom+lens.offsetHeight/2)+'px';
-});
-book.addEventListener('mouseleave',()=>{magnifier.style.display='none';zoomActive=false;});
-
-showPage(0);
-</script>
-
+    window.addEventListener('keydown',e=>{
+      if(e.key==='ArrowUp')slidesEl.children[Math.max(0,active-1)].scrollIntoView({behavior:'smooth'});
+      if(e.key==='ArrowDown'||e.key===' ')slidesEl.children[Math.min(total-1,active+1)].scrollIntoView({behavior:'smooth'});
+    });
+    updateUI(0);
+  </script>
 </body>
 </html>
