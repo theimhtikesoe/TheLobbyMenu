@@ -13,53 +13,59 @@
   }
   * { box-sizing:border-box; margin:0; padding:0; user-select:none; }
 
-  body {
+  html, body {
+    height: 100%;
+    width: 100%;
     background: var(--bg);
-    height: 100vh;
-    width: 100vw;
     overflow: hidden;
     font-family: 'Georgia', serif;
   }
 
-  /* Fixed container to stop global layout movement */
+  /* Keep perfectly centered, no movement */
   .stage {
-    position: fixed;
-    top: 50%; left: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: min(90vw, 700px);
+    height: min(90vh, 1000px);
     transform: translate(-50%, -50%);
     display: flex;
     justify-content: center;
     align-items: center;
-    width: min(90vw, 700px);
-    height: min(90vh, 1000px);
+    overflow: hidden;
+    will-change: transform;
+    contain: layout paint;
   }
 
   .book {
+    position: relative;
     width: 100%;
     height: 100%;
     perspective: 2000px;
     transform-style: preserve-3d;
-    position: relative;
+    overflow: visible;
   }
 
   .page {
+    position: absolute;
     width: 100%;
     height: 100%;
-    position: absolute;
     top: 0; left: 0;
     transform-origin: left;
-    transition: transform 0.9s cubic-bezier(0.45, 0.02, 0.35, 1);
+    transition: transform 1s cubic-bezier(0.45, 0.02, 0.35, 1);
     box-shadow: 0 8px 20px var(--shadow);
     border-radius: 8px;
     overflow: hidden;
     background: var(--bg);
-    will-change: transform;
     backface-visibility: hidden;
+    will-change: transform;
   }
 
   .page img {
     width: 100%;
     height: 100%;
     object-fit: contain;
+    display: block;
     background: var(--bg);
   }
 
@@ -125,12 +131,17 @@ const images = [
 ];
 
 const book = document.getElementById('book');
-images.forEach((src, i) => {
+images.forEach((src) => {
   const page = document.createElement('div');
   page.className = 'page';
+  const link = document.createElement('a');
+  link.href = src;
+  link.target = "_blank";
   const img = document.createElement('img');
   img.src = src;
-  page.appendChild(img);
+  img.loading = "lazy";
+  link.appendChild(img);
+  page.appendChild(link);
   book.appendChild(page);
 });
 
