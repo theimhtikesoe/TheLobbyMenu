@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <title>The Lobby Bar and Bed - Menu</title>
 <meta name="theme-color" content="#e8dcb4" />
 <style>
   :root {
-    --bg: #e8dcb4;
+    --bg: #e8dcb4; /* warm gold-beige base */
     --gold: #d4af37;
     --shadow: rgba(0,0,0,0.3);
   }
@@ -18,11 +18,11 @@
     background: var(--bg);
     height: 100vh;
     width: 100vw;
-    overflow:hidden;
+    overflow-x: hidden;
     font-family: 'Georgia', serif;
-    display:flex;
-    justify-content:center;
-    align-items:center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .stage {
@@ -30,19 +30,19 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100%;
     max-width: 700px;
+    height: auto;
     border-radius: 16px;
+    box-shadow: 0 0 50px rgba(0,0,0,0.25);
     background: transparent;
-    touch-action: none;
-    overflow: hidden;
   }
 
   .book {
     width: 100%;
-    position: relative;
     perspective: 2000px;
     transform-style: preserve-3d;
-    transition: transform 0.3s ease;
+    position: relative;
   }
 
   .page {
@@ -51,16 +51,17 @@
     top: 0; left: 0;
     transform-origin: left;
     transition: transform 0.6s ease;
+    box-shadow: 0 8px 20px var(--shadow);
     border-radius: 16px;
     overflow: hidden;
     background: transparent;
-    box-shadow: 0 8px 20px var(--shadow);
+    will-change: transform;
     backface-visibility: hidden;
   }
 
   .page img {
     width: 100%;
-    height: auto;
+    height: auto; /* ✅ image height controls size now */
     display: block;
     object-fit: contain;
     mix-blend-mode: multiply;
@@ -112,7 +113,7 @@
 </head>
 <body>
 
-<div class="stage" id="stage">
+<div class="stage">
   <div class="book" id="book"></div>
 </div>
 <button id="prevBtn" class="nav-btn">‹</button>
@@ -131,15 +132,11 @@ const images = [
 ];
 
 const book = document.getElementById('book');
-images.forEach(src => {
+images.forEach((src, i) => {
   const page = document.createElement('div');
   page.className = 'page';
   const img = document.createElement('img');
   img.src = src;
-  img.onload = () => {
-    const stage = document.getElementById('stage');
-    stage.style.height = img.height + 'px';
-  };
   page.appendChild(img);
   book.appendChild(page);
 });
@@ -162,9 +159,14 @@ document.getElementById('prevBtn').onclick = () => {
   if (current > 0) { current--; showPage(current); }
 };
 
-/* Swipe gestures */
+/* 🧭 Improved Swipe gestures */
 let startX = 0, isMoving = false;
-book.addEventListener('touchstart', e => { startX = e.touches[0].clientX; isMoving = true; });
+
+book.addEventListener('touchstart', e => {
+  startX = e.touches[0].clientX;
+  isMoving = true;
+});
+
 book.addEventListener('touchmove', e => {
   if (!isMoving) return;
   const moveX = e.touches[0].clientX - startX;
@@ -174,40 +176,10 @@ book.addEventListener('touchmove', e => {
     isMoving = false;
   }
 });
+
 book.addEventListener('touchend', () => { isMoving = false; });
 
-/* Zoom gestures */
-let scale = 1, lastDist = 0, lastTap = 0;
-const stage = document.getElementById('stage');
-
-function distance(touches) {
-  const [a, b] = touches;
-  return Math.hypot(b.clientX - a.clientX, b.clientY - a.clientY);
-}
-
-stage.addEventListener('touchstart', e => {
-  if (e.touches.length === 2) {
-    lastDist = distance(e.touches);
-  } else if (e.touches.length === 1) {
-    const now = Date.now();
-    if (now - lastTap < 300) {
-      scale = scale === 1 ? 2 : 1;
-      book.style.transform = `scale(${scale})`;
-    }
-    lastTap = now;
-  }
-});
-
-stage.addEventListener('touchmove', e => {
-  if (e.touches.length === 2) {
-    e.preventDefault();
-    const dist = distance(e.touches);
-    const delta = dist / lastDist;
-    scale = Math.min(Math.max(scale * delta, 1), 2);
-    book.style.transform = `scale(${scale})`;
-    lastDist = dist;
-  }
-});
+showPage(0);
 </script>
 
 </body>
