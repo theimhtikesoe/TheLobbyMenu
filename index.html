@@ -1,81 +1,119 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>The Lobby Bar and Bed - Menu Book</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>The Lobby Bar and Bed - Menu</title>
+<meta name="theme-color" content="#f5e9c8" />
 <style>
-  :root{
-    --bg:#0b0b0b;
-    --fg:#f4f4f4;
-    --accent:#e11d48;
+  :root {
+    --bg: #f5e9c8;
+    --gold: #d4af37;
+    --shadow: rgba(0,0,0,0.25);
   }
-  body{
-    margin:0; height:100vh; display:flex;
-    justify-content:center; align-items:center;
-    background:var(--bg); overflow:hidden;
-    font-family:sans-serif;
-  }
-  .book{
-    position:relative;
-    width:80vmin; height:90vmin;
-    perspective:2000px;
-  }
-  .page{
-    position:absolute;
-    width:100%; height:100%;
-    transform-origin:left;
-    transform-style:preserve-3d;
-    transition:transform 1s ease;
-    box-shadow:0 0 30px rgba(0,0,0,.6);
-    border-radius:10px;
-    overflow:hidden;
-  }
-  .page img{
-    width:100%; height:100%; object-fit:cover;
-  }
-  .page.flipped{
-    transform:rotateY(-180deg);
-  }
-  .page::after{
-    content:"";
-    position:absolute;
-    top:0; left:0; width:100%; height:100%;
-    background:linear-gradient(to right,rgba(0,0,0,0.2),rgba(0,0,0,0));
-    backface-visibility:hidden;
-  }
-  .page:nth-child(even)::after{
-    background:linear-gradient(to left,rgba(0,0,0,0.2),rgba(0,0,0,0));
+  * { box-sizing:border-box; margin:0; padding:0; user-select:none; }
+
+  body {
+    background: var(--bg);
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    font-family: 'Georgia', serif;
   }
 
-  .counter{
-    position:fixed; top:20px; right:20px;
-    color:var(--fg); font-size:14px;
-    background:rgba(255,255,255,.1);
-    padding:6px 10px; border-radius:999px;
-    backdrop-filter:blur(6px);
+  /* Fixed container to stop global layout movement */
+  .stage {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: min(90vw, 700px);
+    height: min(90vh, 1000px);
   }
 
-  button{
-    position:fixed; top:50%;
-    transform:translateY(-50%);
-    background:none; border:none; color:var(--fg);
-    font-size:32px; cursor:pointer; padding:20px;
-    transition:0.3s;
+  .book {
+    width: 100%;
+    height: 100%;
+    perspective: 2000px;
+    transform-style: preserve-3d;
+    position: relative;
   }
-  button:hover{color:var(--accent);}
-  #prev{left:10px;}
-  #next{right:10px;}
+
+  .page {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0; left: 0;
+    transform-origin: left;
+    transition: transform 0.9s cubic-bezier(0.45, 0.02, 0.35, 1);
+    box-shadow: 0 8px 20px var(--shadow);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--bg);
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+
+  .page img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: var(--bg);
+  }
+
+  .page.flipped {
+    transform: rotateY(-180deg);
+    box-shadow: none;
+  }
+
+  .book::before {
+    content: "";
+    position: absolute;
+    top: -10px; left: -10px; right: -10px; bottom: -10px;
+    border: 2px solid var(--gold);
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(212,175,55,0.4);
+    pointer-events: none;
+  }
+
+  /* Navigation */
+  .nav-btn {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(212,175,55,0.2);
+    border: 1px solid rgba(212,175,55,0.6);
+    color: #3b2f00;
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 20;
+    backdrop-filter: blur(5px);
+  }
+  .nav-btn:hover { background: rgba(212,175,55,0.3); }
+  #prevBtn { left: 20px; }
+  #nextBtn { right: 20px; }
+
+  @media (max-width:768px) {
+    #prevBtn { left: 10px; }
+    #nextBtn { right: 10px; }
+  }
 </style>
 </head>
 <body>
-<div class="counter" id="counter">1 / 8</div>
-<div class="book" id="book"></div>
-<button id="prev">⟨</button>
-<button id="next">⟩</button>
+
+<div class="stage">
+  <div class="book" id="book"></div>
+</div>
+<button id="prevBtn" class="nav-btn">‹</button>
+<button id="nextBtn" class="nav-btn">›</button>
 
 <script>
-const images=[
+const images = [
   "https://i.postimg.cc/281HL6Zv/1.jpg",
   "https://i.postimg.cc/d1Q6stF8/2.jpg",
   "https://i.postimg.cc/DwMyf3Z8/3.jpg",
@@ -86,43 +124,45 @@ const images=[
   "https://i.postimg.cc/R0LGxJkq/8.jpg"
 ];
 
-const book=document.getElementById('book');
-const counter=document.getElementById('counter');
-
-images.forEach((src,i)=>{
-  const page=document.createElement('div');
-  page.className='page';
-  page.style.zIndex=images.length-i;
-  const img=document.createElement('img');
-  img.src=src;
+const book = document.getElementById('book');
+images.forEach((src, i) => {
+  const page = document.createElement('div');
+  page.className = 'page';
+  const img = document.createElement('img');
+  img.src = src;
   page.appendChild(img);
   book.appendChild(page);
 });
 
-const pages=document.querySelectorAll('.page');
-let current=0;
-updateCounter();
+let current = 0;
+const pages = document.querySelectorAll('.page');
+const total = pages.length;
 
-function flipNext(){
-  if(current<pages.length){
-    pages[current].classList.add('flipped');
-    current++;
-    updateCounter();
-  }
-}
-function flipPrev(){
-  if(current>0){
-    current--;
-    pages[current].classList.remove('flipped');
-    updateCounter();
-  }
-}
-function updateCounter(){
-  counter.textContent=`${Math.min(current+1,images.length)} / ${images.length}`;
+function showPage(index) {
+  pages.forEach((page, i) => {
+    page.style.zIndex = total - i;
+    page.classList.toggle('flipped', i < index);
+  });
 }
 
-document.getElementById('next').onclick=flipNext;
-document.getElementById('prev').onclick=flipPrev;
+document.getElementById('nextBtn').onclick = () => {
+  if (current < total) { current++; showPage(current); }
+};
+document.getElementById('prevBtn').onclick = () => {
+  if (current > 0) { current--; showPage(current); }
+};
+
+/* Swipe gestures */
+let startX = 0;
+book.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+book.addEventListener('touchend', e => {
+  const endX = e.changedTouches[0].clientX;
+  if (endX - startX > 50) document.getElementById('prevBtn').click();
+  if (startX - endX > 50) document.getElementById('nextBtn').click();
+});
+
+showPage(0);
 </script>
+
 </body>
 </html>
