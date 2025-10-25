@@ -106,6 +106,24 @@
       box-shadow:0 0 0 4px rgba(225,29,72,.2);
       transform:scale(1.2);
     }
+
+    .controls{
+      position:fixed; left:50%; transform:translateX(-50%);
+      bottom:16px; display:flex; gap:10px;
+      background:var(--glass);
+      padding:8px; border-radius:999px;
+      backdrop-filter:blur(10px);
+      border:1px solid rgba(255,255,255,.08);
+      z-index:6;
+    }
+    .btn{
+      border:0; background:#161616;
+      border-radius:999px;
+      color:var(--fg); font-weight:700;
+      padding:10px 14px; cursor:pointer;
+      border:1px solid rgba(255,255,255,.1);
+    }
+    .btn:active{transform:translateY(1px)}
   </style>
 </head>
 <body>
@@ -122,6 +140,11 @@
 
   <nav class="dots" id="dots"></nav>
   <main id="slides" class="slides"></main>
+
+  <div class="controls">
+    <button class="btn" id="prevBtn">↑</button>
+    <button class="btn" id="nextBtn">↓</button>
+  </div>
 
   <script>
     const images = [
@@ -180,9 +203,11 @@
     },{root:slidesEl,threshold:0.6});
     Array.from(slidesEl.children).forEach(sl=>io.observe(sl));
 
+    document.getElementById('prevBtn').onclick=()=>slidesEl.children[Math.max(0,active-1)].scrollIntoView({behavior:'smooth'});
+    document.getElementById('nextBtn').onclick=()=>slidesEl.children[Math.min(total-1,active+1)].scrollIntoView({behavior:'smooth'});
     window.addEventListener('keydown',e=>{
-      if(e.key==='ArrowUp')slidesEl.children[Math.max(0,active-1)].scrollIntoView({behavior:'smooth'});
-      if(e.key==='ArrowDown'||e.key===' ')slidesEl.children[Math.min(total-1,active+1)].scrollIntoView({behavior:'smooth'});
+      if(e.key==='ArrowUp')document.getElementById('prevBtn').click();
+      if(e.key==='ArrowDown'||e.key===' ')document.getElementById('nextBtn').click();
     });
     updateUI(0);
   </script>
