@@ -63,12 +63,13 @@
     top: 0; left: 0;
     transform-origin: left center;
     transform-style: preserve-3d;
-    transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+    transition: transform 1.8s cubic-bezier(0.45, 0.02, 0.25, 1);
     box-shadow: 0 8px 25px var(--shadow);
     border-radius: 10px;
     background: var(--paper);
     overflow: hidden;
     backface-visibility: hidden;
+    will-change: transform;
   }
 
   .page img {
@@ -77,35 +78,40 @@
     object-fit: contain;
     background: var(--paper);
     filter: brightness(0.98) contrast(1.05);
+    transform: translateZ(1px);
   }
 
+  /* page light shading when flipping */
   .page::after {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(to left, rgba(0,0,0,0.15) 0%, transparent 40%);
+    background: linear-gradient(to left, rgba(0,0,0,0.2) 0%, transparent 40%);
+    opacity: 0.8;
+    transition: opacity 1s ease;
     pointer-events: none;
   }
+  .page.flipped::after { opacity: 0; }
 
   .page.flipped {
     transform: rotateY(-180deg);
     box-shadow: none;
   }
 
-  /* subtle inner shadow on book spine */
+  /* spine shadow */
   .book::after {
     content: "";
     position: absolute;
     top: 0; bottom: 0;
     left: 50%;
-    width: 4px;
+    width: 6px;
     transform: translateX(-50%);
-    background: linear-gradient(to right, rgba(0,0,0,0.15), rgba(255,255,255,0.1));
+    background: linear-gradient(to right, rgba(0,0,0,0.18), rgba(255,255,255,0.1));
     border-radius: 2px;
     pointer-events: none;
   }
 
-  /* Navigation Buttons */
+  /* Navigation */
   .nav-btn {
     position: fixed;
     top: 50%;
@@ -113,16 +119,19 @@
     background: rgba(212,175,55,0.2);
     border: 1px solid rgba(212,175,55,0.6);
     color: #3b2f00;
-    width: 52px; height: 52px;
+    width: 54px; height: 54px;
     border-radius: 50%;
-    font-size: 26px;
+    font-size: 28px;
     font-weight: bold;
     cursor: pointer;
     z-index: 50;
     backdrop-filter: blur(6px);
-    transition: 0.2s;
+    transition: 0.25s;
   }
-  .nav-btn:hover { background: rgba(212,175,55,0.35); transform: translateY(-50%) scale(1.05); }
+  .nav-btn:hover {
+    background: rgba(212,175,55,0.35);
+    transform: translateY(-50%) scale(1.05);
+  }
   #prevBtn { left: 30px; }
   #nextBtn { right: 30px; }
 
@@ -153,11 +162,12 @@ const images = [
 ];
 
 const book = document.getElementById('book');
-images.forEach((src, i) => {
+images.forEach((src) => {
   const page = document.createElement('div');
   page.className = 'page';
   const img = document.createElement('img');
   img.src = src;
+  img.loading = "lazy";
   page.appendChild(img);
   book.appendChild(page);
 });
