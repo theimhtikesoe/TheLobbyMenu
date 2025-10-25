@@ -9,41 +9,51 @@
   :root {
     --bg: #f5e9c8;
     --gold: #d4af37;
-    --shadow: rgba(0,0,0,0.25);
+    --shadow: rgba(0,0,0,0.3);
+    --paper: #fff9e9;
   }
-  * { box-sizing:border-box; margin:0; padding:0; user-select:none; }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
 
   html, body {
     height: 100%;
     width: 100%;
-    background: var(--bg);
+    background: radial-gradient(circle at center, var(--bg), #e3d6a3);
     overflow: hidden;
     font-family: 'Georgia', serif;
   }
 
-  /* Keep perfectly centered, no movement */
   .stage {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    width: min(90vw, 700px);
-    height: min(90vh, 1000px);
+    top: 50%; left: 50%;
     transform: translate(-50%, -50%);
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
-    will-change: transform;
-    contain: layout paint;
+    width: min(90vw, 750px);
+    height: min(90vh, 1000px);
+    perspective: 2200px;
   }
 
   .book {
     position: relative;
     width: 100%;
     height: 100%;
-    perspective: 2000px;
     transform-style: preserve-3d;
-    overflow: visible;
+    box-shadow: 0 40px 60px rgba(0,0,0,0.35);
+    border-radius: 12px;
+    background: linear-gradient(145deg, #f9f0d5 0%, #f2e6b8 100%);
+    border: 2px solid var(--gold);
+  }
+
+  .book::before {
+    content: "";
+    position: absolute;
+    inset: -12px;
+    border: 2px solid var(--gold);
+    border-radius: 14px;
+    box-shadow: 0 0 20px rgba(212,175,55,0.35);
+    pointer-events: none;
   }
 
   .page {
@@ -51,22 +61,30 @@
     width: 100%;
     height: 100%;
     top: 0; left: 0;
-    transform-origin: left;
-    transition: transform 1s cubic-bezier(0.45, 0.02, 0.35, 1);
-    box-shadow: 0 8px 20px var(--shadow);
-    border-radius: 8px;
+    transform-origin: left center;
+    transform-style: preserve-3d;
+    transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+    box-shadow: 0 8px 25px var(--shadow);
+    border-radius: 10px;
+    background: var(--paper);
     overflow: hidden;
-    background: var(--bg);
     backface-visibility: hidden;
-    will-change: transform;
   }
 
   .page img {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    display: block;
-    background: var(--bg);
+    background: var(--paper);
+    filter: brightness(0.98) contrast(1.05);
+  }
+
+  .page::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to left, rgba(0,0,0,0.15) 0%, transparent 40%);
+    pointer-events: none;
   }
 
   .page.flipped {
@@ -74,17 +92,20 @@
     box-shadow: none;
   }
 
-  .book::before {
+  /* subtle inner shadow on book spine */
+  .book::after {
     content: "";
     position: absolute;
-    top: -10px; left: -10px; right: -10px; bottom: -10px;
-    border: 2px solid var(--gold);
-    border-radius: 12px;
-    box-shadow: 0 0 15px rgba(212,175,55,0.4);
+    top: 0; bottom: 0;
+    left: 50%;
+    width: 4px;
+    transform: translateX(-50%);
+    background: linear-gradient(to right, rgba(0,0,0,0.15), rgba(255,255,255,0.1));
+    border-radius: 2px;
     pointer-events: none;
   }
 
-  /* Navigation */
+  /* Navigation Buttons */
   .nav-btn {
     position: fixed;
     top: 50%;
@@ -92,17 +113,18 @@
     background: rgba(212,175,55,0.2);
     border: 1px solid rgba(212,175,55,0.6);
     color: #3b2f00;
-    width: 48px; height: 48px;
+    width: 52px; height: 52px;
     border-radius: 50%;
-    font-size: 24px;
+    font-size: 26px;
     font-weight: bold;
     cursor: pointer;
-    z-index: 20;
-    backdrop-filter: blur(5px);
+    z-index: 50;
+    backdrop-filter: blur(6px);
+    transition: 0.2s;
   }
-  .nav-btn:hover { background: rgba(212,175,55,0.3); }
-  #prevBtn { left: 20px; }
-  #nextBtn { right: 20px; }
+  .nav-btn:hover { background: rgba(212,175,55,0.35); transform: translateY(-50%) scale(1.05); }
+  #prevBtn { left: 30px; }
+  #nextBtn { right: 30px; }
 
   @media (max-width:768px) {
     #prevBtn { left: 10px; }
@@ -131,17 +153,12 @@ const images = [
 ];
 
 const book = document.getElementById('book');
-images.forEach((src) => {
+images.forEach((src, i) => {
   const page = document.createElement('div');
   page.className = 'page';
-  const link = document.createElement('a');
-  link.href = src;
-  link.target = "_blank";
   const img = document.createElement('img');
   img.src = src;
-  img.loading = "lazy";
-  link.appendChild(img);
-  page.appendChild(link);
+  page.appendChild(img);
   book.appendChild(page);
 });
 
