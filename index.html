@@ -46,7 +46,7 @@
       backdrop-filter: blur(4px);
     }
 
-    .menu-topbar input, .menu-topbar select {
+    .menu-topbar select {
       flex: 1;
       border: none;
       outline: none;
@@ -57,9 +57,6 @@
       color: var(--text-color);
       box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
       font-family: 'Georgia', serif;
-    }
-
-    .menu-topbar select {
       appearance: none;
       cursor: pointer;
       text-align-last: center;
@@ -146,10 +143,51 @@
     .nav-btn:disabled { opacity: 0.5; cursor: not-allowed; }
     #prevBtn { left: 20px; } #nextBtn { right: 20px; }
 
+    /* ✨ Feedback Button */
+    .feedback-container {
+      margin-top: 16px;
+      text-align: center;
+    }
+
+    .feedback-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dark));
+      color: #3b2f00;
+      font-weight: bold;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 50px;
+      box-shadow: 0 4px 15px rgba(212,175,55,0.4);
+      transition: all 0.3s ease;
+      font-family: 'Georgia', serif;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feedback-btn::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.3);
+      transition: all 0.5s ease;
+    }
+
+    .feedback-btn:hover::before {
+      left: 100%;
+    }
+
+    .feedback-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(212,175,55,0.7);
+    }
+
     @media (max-width: 768px) {
       .stage { width: 95vw; }
       .menu-topbar { flex-direction: column; gap: 8px; }
-      .menu-topbar select, .menu-topbar input { width: 100%; text-align: center; }
+      .menu-topbar select { width: 100%; text-align: center; }
     }
   </style>
 </head>
@@ -175,6 +213,13 @@
 
   <button id="prevBtn" class="nav-btn">‹</button>
   <button id="nextBtn" class="nav-btn">›</button>
+
+  <!-- 🌟 Feedback Button -->
+  <div class="feedback-container">
+    <a href="https://maps.app.goo.gl/zVwqCcwRbnRxGhiC9?g_st=ipc" target="_blank" class="feedback-btn">
+      ⭐ Leave a Google Review
+    </a>
+  </div>
 
   <script>
     class FlipBook {
