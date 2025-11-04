@@ -56,6 +56,7 @@
       position: relative;
       transform-style: preserve-3d;
       cursor: grab;
+      touch-action: pan-y pinch-zoom; /* allow pinch zoom naturally */
     }
 
     .book:active {
@@ -169,9 +170,9 @@
         this.images = images;
         this.pages = [];
         this.currentPageIndex = 0;
-        this.isMoving = false;
         this.startX = 0;
         this.swipeThreshold = 80;
+        this.isPinching = false;
         this.init();
       }
 
@@ -209,8 +210,19 @@
       addEventListeners() {
         this.prevBtn.addEventListener('click', () => this.goToPrevPage());
         this.nextBtn.addEventListener('click', () => this.goToNextPage());
-        this.book.addEventListener('touchstart', e => this.startX = e.touches[0].clientX);
+
+        // ✅ Touch gestures with zoom detection
+        this.book.addEventListener('touchstart', e => {
+          if (e.touches.length > 1) {
+            this.isPinching = true;
+            return;
+          }
+          this.isPinching = false;
+          this.startX = e.touches[0].clientX;
+        });
+
         this.book.addEventListener('touchend', e => {
+          if (this.isPinching) return; // Ignore pinch gesture
           const diffX = e.changedTouches[0].clientX - this.startX;
           if (Math.abs(diffX) > this.swipeThreshold) {
             diffX < 0 ? this.goToNextPage() : this.goToPrevPage();
