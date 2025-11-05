@@ -32,7 +32,7 @@
       color: var(--text-color);
     }
 
-    /* 🔸 Fade intro overlay */
+    /* 🔸 Intro fade overlay */
     #intro {
       position: fixed;
       inset: 0;
@@ -61,9 +61,9 @@
       opacity: 1;
     }
 
-    /* 🔸 Top search/select bar */
+    /* 🔸 Top bar */
     .menu-topbar {
-      width: min(90vw, 700px);
+      width: min(95vw, 850px);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -71,7 +71,7 @@
       padding: 10px 18px;
       border-radius: 12px;
       box-shadow: 0 5px 15px rgba(0,0,0,0.25);
-      margin-bottom: 14px;
+      margin-bottom: 16px;
       backdrop-filter: blur(4px);
     }
 
@@ -79,18 +79,15 @@
       flex: 1;
       border: none;
       outline: none;
-      font-size: 16px;
+      font-size: 18px;
       border-radius: 8px;
-      padding: 8px 12px;
+      padding: 10px 14px;
       background: rgba(255,255,255,0.9);
       color: var(--text-color);
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
       font-family: 'Georgia', serif;
-      appearance: none;
       cursor: pointer;
       text-align-last: center;
       font-weight: bold;
-      background: rgba(255,255,255,0.85);
       transition: var(--transition);
     }
 
@@ -99,14 +96,14 @@
       transform: scale(1.02);
     }
 
+    /* 🔸 Stage */
     .stage {
       position: relative;
-      width: min(90vw, 700px);
-      aspect-ratio: 17 / 19;
+      width: min(95vw, 850px);
+      aspect-ratio: 4016 / 4488;
       display: flex;
       justify-content: center;
       align-items: center;
-      background: transparent;
       perspective: 2000px;
     }
 
@@ -130,6 +127,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      background: #fff;
     }
 
     .page img {
@@ -144,6 +142,7 @@
 
     .page.flipped { transform: rotateY(-180deg); }
 
+    /* 🔸 Buttons */
     .nav-btn {
       position: fixed;
       top: 50%;
@@ -151,10 +150,10 @@
       background: rgba(212, 175, 55, 0.25);
       border: 1px solid rgba(212, 175, 55, 0.6);
       color: var(--text-color);
-      width: 48px;
-      height: 48px;
+      width: 52px;
+      height: 52px;
       border-radius: 50%;
-      font-size: 24px;
+      font-size: 26px;
       cursor: pointer;
       z-index: 20;
       backdrop-filter: blur(5px);
@@ -166,13 +165,15 @@
 
     .nav-btn:hover:not(:disabled) {
       background: rgba(212, 175, 55, 0.4);
-      box-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
+      box-shadow: 0 0 12px rgba(212, 175, 55, 0.6);
     }
 
     .nav-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    #prevBtn { left: 20px; } #nextBtn { right: 20px; }
+    #prevBtn { left: 20px; } 
+    #nextBtn { right: 20px; }
 
-    .feedback-container { margin-top: 16px; text-align: center; }
+    /* 🔸 Feedback button */
+    .feedback-container { margin-top: 20px; text-align: center; }
 
     .feedback-btn {
       display: inline-block;
@@ -180,7 +181,7 @@
       color: #3b2f00;
       font-weight: bold;
       text-decoration: none;
-      padding: 10px 20px;
+      padding: 12px 24px;
       border-radius: 50px;
       box-shadow: 0 4px 15px rgba(212,175,55,0.4);
       transition: all 0.3s ease;
@@ -208,7 +209,7 @@
     }
 
     @media (max-width: 768px) {
-      .stage { width: 95vw; }
+      .stage { width: 100vw; }
       .menu-topbar { flex-direction: column; gap: 8px; }
       .menu-topbar select { width: 100%; text-align: center; }
     }
@@ -246,13 +247,13 @@
   </main>
 
   <script>
-    // Intro fade sequence
+    // Intro animation
     const intro = document.getElementById("intro");
     const main = document.querySelector("main");
 
     window.addEventListener("load", () => {
-      setTimeout(() => intro.classList.add("fade-in"), 300); // Fade in intro
-      setTimeout(() => intro.classList.remove("fade-in"), 3000); // Start fade out
+      setTimeout(() => intro.classList.add("fade-in"), 300);
+      setTimeout(() => intro.classList.remove("fade-in"), 3000);
       setTimeout(() => {
         intro.classList.add("fade-out");
         main.classList.add("visible");
@@ -260,7 +261,7 @@
       setTimeout(() => intro.style.display = "none", 5500);
     });
 
-    // Existing menu flipbook JS
+    // FlipBook class
     class FlipBook {
       constructor(bookElementId, prevBtnId, nextBtnId, images) {
         this.book = document.getElementById(bookElementId);
@@ -365,14 +366,14 @@
     }
 
     const menuImages = [
-      "https://i.postimg.cc/WpKf585z/1.png",
-      "https://i.postimg.cc/rybYfjfm/2.png",
-      "https://i.postimg.cc/QxTYw7zb/3.png",
-      "https://i.postimg.cc/KYZ91H89/4.png",
-      "https://i.postimg.cc/fWFg8C8k/5.png",
-      "https://i.postimg.cc/KcVs0fJ6/6.png",
-      "https://i.postimg.cc/SKDgCfn7/7.png",
-      "https://i.postimg.cc/BvqhjVnY/8.png"
+      "https://i.postimg.cc/90m4DC5L/1.png",
+      "https://i.postimg.cc/d3s7hwcM/2.png",
+      "https://i.postimg.cc/0jVzmF9x/3.png",
+      "https://i.postimg.cc/wMw1JZ9x/4.png",
+      "https://i.postimg.cc/gctcVvvV/5.png",
+      "https://i.postimg.cc/8PFptjHm/6.png",
+      "https://i.postimg.cc/rFdVQKJf/7.png",
+      "https://i.postimg.cc/TYydCp9C/8.png"
     ];
 
     document.addEventListener('DOMContentLoaded', () => {
