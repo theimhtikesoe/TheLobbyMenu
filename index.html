@@ -60,24 +60,23 @@
     main.visible { opacity: 1; }
 
     /* 🔸 Top bar */
-    .menu-topbar {
-      position: relative;
-      margin-top:20px;
-      top: 25px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(255, 248, 220, 0.85);
-      border: 2px solid var(--gold-dark);
-      border-radius: 40px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-      padding: 10px 24px;
-      backdrop-filter: blur(6px);
-      z-index: 50;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 5px;
-    }
+     .menu-topbar {
+  position: relative; /* 🟡 fixed → relative */
+  margin-top: 20px;   /* 🟡 stage အပေါ်ကနေ spacing လေး */
+  left: auto;
+  transform: none;
+  background: rgba(255, 248, 220, 0.9);
+  border: 2px solid var(--gold-dark);
+  border-radius: 40px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  padding: 10px 24px;
+  backdrop-filter: blur(6px);
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
 
     .menu-topbar select {
       border: none;
