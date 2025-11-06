@@ -25,8 +25,10 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      overflow: hidden;
+      overflow: hidden; /* Prevent page scrolling */
       padding: 0 10px;
+      height: 100vh;
+      touch-action: none; /* disable page scroll while swiping */
     }
 
     #intro {
@@ -131,6 +133,8 @@
       justify-content: center;
       align-items: center;
       perspective: 2000px;
+      overflow: hidden;
+      touch-action: pan-y;
     }
 
     .book {
@@ -138,7 +142,8 @@
       height: 100%;
       position: relative;
       transform-style: preserve-3d;
-      touch-action: pan-y pinch-zoom;
+      touch-action: none;
+      user-select: none;
     }
 
     .page {
@@ -162,6 +167,7 @@
       object-fit: contain;
       mix-blend-mode: multiply;
       filter: brightness(1.05) contrast(1.1);
+      pointer-events: none;
     }
 
     .page.flipped { transform: rotateY(-180deg); }
@@ -281,7 +287,6 @@
       </a>
     </div>
 
-    <!-- 💛 Thank You message -->
     <div class="thankyou">
       💛 Thank you for visiting <b>The Lobby Bar and Bed</b>!<br>
       We truly appreciate your support 🥂✨<br>
@@ -312,8 +317,7 @@
         this.pages = [];
         this.currentPageIndex = 0;
         this.startX = 0;
-        this.swipeThreshold = 80;
-        this.isPinching = false;
+        this.swipeThreshold = 60;
         this.isAnimating = false;
         this.init();
       }
@@ -331,13 +335,13 @@
           const img = new Image();
           img.src = src;
           img.onload = resolve;
-          img.onerror = () => resolve();
+          img.onerror = resolve;
         }));
         await Promise.all(promises);
       }
 
       createPages() {
-        this.images.forEach((src, index) => {
+        this.images.forEach(src => {
           const page = document.createElement('div');
           page.className = 'page';
           const img = document.createElement('img');
@@ -351,18 +355,38 @@
       addEventListeners() {
         this.prevBtn.addEventListener('click', () => this.goToPrevPage());
         this.nextBtn.addEventListener('click', () => this.goToNextPage());
+
         document.getElementById('menuSelect').addEventListener('change', (e) => {
           const index = parseInt(e.target.value);
           if (!isNaN(index)) this.goToPage(index);
+        });
+
+        // 👉 Touch events for swipe navigation
+        this.book.addEventListener('touchstart', (e) => {
+          if (e.touches.length === 1) {
+            this.startX = e.touches[0].clientX;
+          }
+        });
+
+        this.book.addEventListener('touchmove', (e) => {
+          e.preventDefault(); // Prevent page scroll
+        }, { passive: false });
+
+        this.book.addEventListener('touchend', (e) => {
+          const endX = e.changedTouches[0].clientX;
+          const diffX = endX - this.startX;
+          if (Math.abs(diffX) > this.swipeThreshold) {
+            if (diffX < 0) this.goToNextPage();
+            else this.goToPrevPage();
+          }
         });
       }
 
       updatePageDisplay() {
         this.pages.forEach((page, i) => {
           page.style.zIndex = this.pages.length - i;
-          i < this.currentPageIndex
-            ? page.classList.add('flipped')
-            : page.classList.remove('flipped');
+          if (i < this.currentPageIndex) page.classList.add('flipped');
+          else page.classList.remove('flipped');
         });
       }
 
@@ -377,7 +401,7 @@
           this.currentPageIndex++;
           this.updatePageDisplay();
           this.updateNavigationButtons();
-          setTimeout(() => this.isAnimating = false, 800);
+          setTimeout(() => this.isAnimating = false, 700);
         }
       }
 
@@ -387,7 +411,7 @@
           this.currentPageIndex--;
           this.updatePageDisplay();
           this.updateNavigationButtons();
-          setTimeout(() => this.isAnimating = false, 800);
+          setTimeout(() => this.isAnimating = false, 700);
         }
       }
 
@@ -397,7 +421,7 @@
           this.currentPageIndex = index;
           this.updatePageDisplay();
           this.updateNavigationButtons();
-          setTimeout(() => this.isAnimating = false, 800);
+          setTimeout(() => this.isAnimating = false, 700);
         }
       }
     }
