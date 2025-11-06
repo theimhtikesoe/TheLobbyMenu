@@ -489,6 +489,13 @@
         }
       }
     }
+    
+    // prevent vertical scroll while dragging horizontally on book
+document.addEventListener('touchmove', function (e) {
+  if (e.target.closest('.book')) {
+    e.preventDefault();
+  }
+}, { passive: false });
 
     const menuImages = [
       "https://i.postimg.cc/3xR6QcNf/1.png",
