@@ -2,9 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <!-- ✅ FIXED VIEWPORT (Zoom disable + Fit solid on all browsers) -->
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>The Lobby Bar and Bed - Menu</title>
   <meta name="theme-color" content="#e8dcb4" />
+
   <style>
     :root {
       --bg: #f5edd1;
@@ -16,9 +19,14 @@
       --transition: 0.3s ease;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-    body {
+    /* ✅ Safari / Chrome / Edge / Firefox Zoom Fixed */
+    html, body {
       background: var(--bg);
       font-family: 'Georgia', serif;
       color: var(--text-color);
@@ -29,6 +37,11 @@
       padding: 0 10px;
       height: 100vh;
       touch-action: none;
+      overscroll-behavior: none;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      zoom: 1;
     }
 
     #intro {
@@ -46,6 +59,7 @@
       z-index: 9999;
       pointer-events: none;
     }
+
     #intro.fade-in { opacity: 1; }
     #intro.fade-out { opacity: 0; }
 
@@ -61,6 +75,7 @@
       min-height: 100vh;
       padding-top: 20px;
     }
+
     main.visible { opacity: 1; }
 
     .menu-topbar {
@@ -290,7 +305,7 @@
       💛 Thank you for visiting <b>The Lobby Bar and Bed</b>!<br>
       We truly appreciate your support 🥂✨<br>
       Wishing you a lovely day! 🌼🍸<br><br>
-      </div>
+    </div>
   </main>
 
   <script>
@@ -435,6 +450,11 @@
         "https://i.postimg.cc/MH9WHdLL/7.png",
         "https://i.postimg.cc/d35q34fp/8.png"
       ]);
+    });
+
+    /* ✅ Orientation fix to maintain solid display */
+    window.addEventListener("orientationchange", () => {
+      document.body.style.zoom = "1";
     });
   </script>
 </body>
