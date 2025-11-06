@@ -244,7 +244,34 @@
     .feedback-btn:active {
       transform: scale(0.98);
     }
+    /* YouTube video box */
+    .video-box {
+      margin-top: 10px;
+      width: 320px;
+      max-width: 90%;
+      aspect-ratio: 16 / 9;
+      border: 3px solid var(--gold-dark);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.25),
+                  inset 0 0 10px rgba(212,175,55,0.3);
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
 
+    .video-box:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 25px rgba(212,175,55,0.6);
+    }
+
+    .video-box iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
     @media (max-width: 768px) {
       .menu-topbar {
         max-width: 90%;
@@ -512,5 +539,17 @@ document.addEventListener('touchmove', function (e) {
       new FlipBook('book', 'prevBtn', 'nextBtn', menuImages);
     });
   </script>
+  
+      <div class="video-box">
+      <iframe 
+        src="https://www.youtube.com/embed/opO16d_0Ge8?si=wGPmC5ZHnXxw2W-z" 
+        title="The Lobby Bar and Bed" 
+        frameborder="0" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        allowfullscreen>
+      </iframe>
+    </div>
+    
+    
 </body>
 </html>
