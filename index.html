@@ -25,10 +25,10 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      overflow: hidden; /* Prevent page scrolling */
+      overflow: hidden;
       padding: 0 10px;
       height: 100vh;
-      touch-action: none; /* disable page scroll while swiping */
+      touch-action: none;
     }
 
     #intro {
@@ -231,7 +231,6 @@
       box-shadow: 0 0 20px rgba(212,175,55,0.7);
     }
 
-    /* 💛 Thank You Message */
     .thankyou {
       text-align: center;
       font-family: "Brush Script MT", cursive;
@@ -290,7 +289,8 @@
     <div class="thankyou">
       💛 Thank you for visiting <b>The Lobby Bar and Bed</b>!<br>
       We truly appreciate your support 🥂✨<br>
-      Wishing you a lovely day! 🌼🍸
+      Wishing you a lovely day! 🌼🍸<br><br>
+      📸 <a href="https://postimg.cc/gallery/Hx1vwQW" target="_blank" style="color: var(--gold-dark); text-decoration: underline;">View Full Menu Gallery</a>
     </div>
   </main>
 
@@ -361,7 +361,6 @@
           if (!isNaN(index)) this.goToPage(index);
         });
 
-        // 👉 Touch events for swipe navigation
         this.book.addEventListener('touchstart', (e) => {
           if (e.touches.length === 1) {
             this.startX = e.touches[0].clientX;
@@ -369,7 +368,7 @@
         });
 
         this.book.addEventListener('touchmove', (e) => {
-          e.preventDefault(); // Prevent page scroll
+          e.preventDefault();
         }, { passive: false });
 
         this.book.addEventListener('touchend', (e) => {
@@ -428,14 +427,14 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       new FlipBook('book', 'prevBtn', 'nextBtn', [
-        "https://i.postimg.cc/3xR6QcNf/1.png",
-        "https://i.postimg.cc/htjwR5v6/2.png",
-        "https://i.postimg.cc/13jdmrVJ/3.png",
-        "https://i.postimg.cc/Njznsk2D/4.png",
-        "https://i.postimg.cc/6QCfkrr4/5.png",
-        "https://i.postimg.cc/90gddJh6/6.png",
-        "https://i.postimg.cc/Xq1ffQWn/7.png",
-        "https://i.postimg.cc/90gddJ2m/8.png"
+        "https://i.postimg.cc/nLJ68qR5/1.png",
+        "https://i.postimg.cc/qq1kqjFY/2.png",
+        "https://i.postimg.cc/90LW0Jk6/3.png",
+        "https://i.postimg.cc/YSzTtjT2/4.png",
+        "https://i.postimg.cc/QMJvjVvX/5.png",
+        "https://i.postimg.cc/h4ZWJzvD/6.png",
+        "https://i.postimg.cc/MH9WHdLL/7.png",
+        "https://i.postimg.cc/d35q34fp/8.png"
       ]);
     });
   </script>
