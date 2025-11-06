@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <!-- ✅ FIXED VIEWPORT -->
   <meta name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>The Lobby Bar and Bed - Menu</title>
@@ -34,7 +33,8 @@
       align-items: center;
       overflow-x: hidden;
       overflow-y: auto;
-      height: 100vh;
+      /* ✅ FIXED: height: 100vh အစား min-height ကိုသုံးတာ ပိုကောင်းပါတယ် */
+      min-height: 100vh;
       touch-action: none;
       overscroll-behavior: none;
       -webkit-text-size-adjust: 100%;
@@ -75,8 +75,9 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      min-height: 100vh;
+      /* ✅ FIXED: justify-content: center; ကို flex-start ပြောင်းပြီး min-height ကို ဖြုတ်လိုက်ပါတယ် */
+      /* ဒါမှ content တွေက အပေါ်ကနေ စီးဆင်းမှာပါ */
+      justify-content: flex-start;
       padding-top: calc(20px + env(safe-area-inset-top));
       padding-bottom: env(safe-area-inset-bottom);
     }
@@ -147,7 +148,7 @@
     }
 
     .stage {
-      position: relative;
+      position: relative; /* Nav buttons တွေက ဒါကို မူတည်ဖို့ 'relative' လိုပါတယ် (ရှိပြီးသား) */
       width: 100%;
       aspect-ratio: 4016 / 4488;
       display: flex;
@@ -194,7 +195,8 @@
     .page.flipped { transform: rotateY(-180deg); }
 
     .nav-btn {
-      position: fixed;
+      /* ✅ FIXED: position: fixed အစား absolute သုံးမှ .stage ထဲမှာပဲ နေပါမယ် */
+      position: absolute;
       top: 50%;
       transform: translateY(-50%);
       background: rgba(212,175,55,0.25);
