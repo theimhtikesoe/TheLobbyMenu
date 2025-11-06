@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <!-- ✅ FIXED VIEWPORT (Zoom disable + Fit solid on all browsers) -->
+  <!-- ✅ FIXED VIEWPORT -->
   <meta name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>The Lobby Bar and Bed - Menu</title>
@@ -25,7 +25,6 @@
       padding: 0;
     }
 
-    /* ✅ Safari / Chrome / Edge / Firefox Zoom Fixed */
     html, body {
       background: var(--bg);
       font-family: 'Georgia', serif;
@@ -33,15 +32,20 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      overflow: hidden;
-      padding: 0 10px;
+      overflow-x: hidden;
+      overflow-y: auto;
       height: 100vh;
       touch-action: none;
       overscroll-behavior: none;
       -webkit-text-size-adjust: 100%;
-      -ms-text-size-adjust: 100%;
       text-size-adjust: 100%;
       zoom: 1;
+
+      /* ✅ Notch Safe Area Fix */
+      padding-top: env(safe-area-inset-top);
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+      padding-bottom: env(safe-area-inset-bottom);
     }
 
     #intro {
@@ -73,13 +77,15 @@
       align-items: center;
       justify-content: center;
       min-height: 100vh;
-      padding-top: 20px;
+      padding-top: calc(20px + env(safe-area-inset-top));
+      padding-bottom: env(safe-area-inset-bottom);
     }
 
     main.visible { opacity: 1; }
 
     .menu-topbar {
-      position: relative;
+      position: sticky;
+      top: env(safe-area-inset-top);
       width: 100%;
       max-width: 400px;
       background: linear-gradient(145deg, var(--gold-light), var(--gold), var(--gold-dark));
@@ -452,7 +458,6 @@
       ]);
     });
 
-    /* ✅ Orientation fix to maintain solid display */
     window.addEventListener("orientationchange", () => {
       document.body.style.zoom = "1";
     });
