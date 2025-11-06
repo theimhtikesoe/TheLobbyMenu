@@ -33,12 +33,19 @@
       align-items: center;
       overflow-x: hidden;
       overflow-y: auto;
+      /* ✅ FIXED: height: 100vh အစား min-height ကိုသုံးတာ ပိုကောင်းပါတယ် */
       min-height: 100vh;
+      touch-action: none;
       overscroll-behavior: none;
       -webkit-text-size-adjust: 100%;
       text-size-adjust: 100%;
-      /* ✅ FIXED: ลบ 'touch-action: none;' และ 'zoom: 1;' ออก */
-      /* ✅ FIXED: ลบ 'padding' safe-area ทั้งหมดออกจาก body */
+      zoom: 1;
+
+      /* ✅ Notch Safe Area Fix */
+      padding-top: env(safe-area-inset-top);
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+      padding-bottom: env(safe-area-inset-bottom);
     }
 
     #intro {
@@ -68,20 +75,17 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      /* ✅ FIXED: justify-content: center; ကို flex-start ပြောင်းပြီး min-height ကို ဖြုတ်လိုက်ပါတယ် */
+      /* ဒါမှ content တွေက အပေါ်ကနေ စီးဆင်းမှာပါ */
       justify-content: flex-start;
-      
-      /* ✅ FIXED: รวม safe-area padding ทั้งหมดไว้ที่ main */
       padding-top: calc(20px + env(safe-area-inset-top));
       padding-bottom: env(safe-area-inset-bottom);
-      padding-left: env(safe-area-inset-left);
-      padding-right: env(safe-area-inset-right);
     }
 
     main.visible { opacity: 1; }
 
     .menu-topbar {
       position: sticky;
-      /* ✅ FIXED: ให้ top-bar เคารพ safe-area ด้วย */
       top: env(safe-area-inset-top);
       width: 100%;
       max-width: 400px;
@@ -144,7 +148,7 @@
     }
 
     .stage {
-      position: relative; 
+      position: relative; /* Nav buttons တွေက ဒါကို မူတည်ဖို့ 'relative' လိုပါတယ် (ရှိပြီးသား) */
       width: 100%;
       aspect-ratio: 4016 / 4488;
       display: flex;
@@ -153,9 +157,6 @@
       perspective: 2000px;
       overflow: hidden;
       touch-action: pan-y;
-      /* ✅ FIXED: เพิ่ม padding ด้านข้างเล็กน้อย เพื่อให้ปุ่มไม่ชิดขอบ */
-      padding-left: 10px;
-      padding-right: 10px;
     }
 
     .book {
@@ -194,6 +195,7 @@
     .page.flipped { transform: rotateY(-180deg); }
 
     .nav-btn {
+      /* ✅ FIXED: position: fixed အစား absolute သုံးမှ .stage ထဲမှာပဲ နေပါမယ် */
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
@@ -225,8 +227,6 @@
     }
 
     .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-    
-    /* ✅ FIXED: ปรับค่า left/right ให้เหมาะสมกับ .stage */
     #prevBtn { left: 20px; }
     #nextBtn { right: 20px; }
 
@@ -298,10 +298,10 @@
 
     <div class="stage">
       <div class="book" id="book"></div>
-      
-      <button id="prevBtn" class="nav-btn" aria-label="Previous page">‹</button>
-      <button id="nextBtn" class="nav-btn" aria-label="Next page">›</button>
     </div>
+
+    <button id="prevBtn" class="nav-btn" aria-label="Previous page">‹</button>
+    <button id="nextBtn" class="nav-btn" aria-label="Next page">›</button>
 
     <div class="feedback-container">
       <a href="https://maps.app.goo.gl/zVwqCcwRbnRxGhiC9?g_st=ipc" target="_blank" rel="noopener noreferrer" class="feedback-btn">
@@ -460,7 +460,9 @@
       ]);
     });
 
-    /* ✅ FIXED: ลบ event listener 'orientationchange' ที่ไม่จำเป็นออก */
+    window.addEventListener("orientationchange", () => {
+      document.body.style.zoom = "1";
+    });
   </script>
 </body>
 </html>
