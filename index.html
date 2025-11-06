@@ -60,7 +60,7 @@
     }
     main.visible { opacity: 1; }
 
-    /* Top bar (GOLD GRADIENT) */
+    /* Fixed Top bar (no overlap) */
     .menu-topbar {
       position: relative;
       width: 100%;
@@ -71,13 +71,14 @@
       box-shadow:
         0 6px 18px rgba(0, 0, 0, 0.25),
         inset 0 0 12px rgba(255, 255, 255, 0.25);
-      padding: 12px 28px;
+      padding: 20px 28px;
       backdrop-filter: blur(8px);
       z-index: 5;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
+      justify-content: center;
+      gap: 10px;
       transition: all 0.3s ease;
       margin-bottom: 20px;
     }
@@ -95,18 +96,19 @@
       font-size: 18px;
       border-radius: 30px;
       padding: 10px 28px;
-      background: linear-gradient(135deg, #fffbe8, #fff3b0);
-      color: var(--text-color);
+      background: var(--gold-dark);
+      color: #fff;
       font-weight: bold;
       cursor: pointer;
       text-align-last: center;
-      box-shadow: inset 0 0 8px rgba(0,0,0,0.1);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
       transition: all var(--transition);
       width: 100%;
+      margin-bottom: 6px;
     }
 
     .menu-topbar select:hover {
-      background: linear-gradient(135deg, #fff6c5, #ffefa5);
+      background: var(--gold);
       transform: scale(1.05);
       box-shadow: 0 0 12px rgba(212,175,55,0.5);
     }
@@ -114,15 +116,16 @@
     /* Hint text with arrow animation */
     .select-hint {
       font-size: 14px;
-      color: var(--text-color);
+      color: #fff;
       font-style: italic;
-      text-shadow: 0 0 5px rgba(212,175,55,0.4);
+      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
       animation: arrowFloat 2s ease-in-out infinite;
+      text-align: center;
     }
 
     @keyframes arrowFloat {
-      0%,100% { transform: translateY(0); opacity: 1; }
-      50% { transform: translateY(-5px); opacity: 0.8; }
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(4px); }
     }
 
     /* Stage (Menu Book) */
@@ -309,8 +312,9 @@
   <div id="intro">THE LOBBY BAR AND BED</div>
 
   <main>
+      <div class="select-hint">⬇️ Please choose a section ⬇️</div>
+    
     <div class="menu-topbar">
-      <span class="select-hint">⬇️ Please choose a section ⬇️</span>
       <select id="menuSelect" aria-label="Menu section selector">
         <option disabled selected>🍸 Choose Section</option>
         <option value="1">Cocktails</option>
@@ -321,7 +325,7 @@
         <option value="6">Rum · Soft Drink</option>
         <option value="7">The Munchies · Day Drink</option>
       </select>
-     </div>
+    </div>
 
     <div class="stage">
       <div class="book" id="book"></div>
@@ -406,11 +410,9 @@
       }
 
       addEventListeners() {
-        // Button navigation
         this.prevBtn.addEventListener('click', () => this.goToPrevPage());
         this.nextBtn.addEventListener('click', () => this.goToNextPage());
 
-        // Touch navigation
         this.book.addEventListener('touchstart', (e) => {
           if (e.touches.length > 1) { 
             this.isPinching = true; 
@@ -422,14 +424,12 @@
 
         this.book.addEventListener('touchend', (e) => {
           if (this.isPinching || this.isAnimating) return;
-          
           const diffX = e.changedTouches[0].clientX - this.startX;
           if (Math.abs(diffX) > this.swipeThreshold) {
             diffX < 0 ? this.goToNextPage() : this.goToPrevPage();
           }
         }, { passive: true });
 
-        // Dropdown navigation
         document.getElementById('menuSelect').addEventListener('change', (e) => {
           const index = parseInt(e.target.value);
           if (!isNaN(index)) {
@@ -437,7 +437,6 @@
           }
         });
 
-        // Keyboard navigation
         document.addEventListener('keydown', (e) => {
           if (e.key === 'ArrowLeft') this.goToPrevPage();
           if (e.key === 'ArrowRight') this.goToNextPage();
@@ -447,12 +446,8 @@
       updatePageDisplay() {
         this.pages.forEach((page, i) => {
           page.style.zIndex = this.pages.length - i;
-          
-          if (i < this.currentPageIndex) {
-            page.classList.add('flipped');
-          } else {
-            page.classList.remove('flipped');
-          }
+          if (i < this.currentPageIndex) page.classList.add('flipped');
+          else page.classList.remove('flipped');
         });
       }
 
@@ -467,10 +462,7 @@
           this.currentPageIndex++;
           this.updatePageDisplay();
           this.updateNavigationButtons();
-          
-          setTimeout(() => {
-            this.isAnimating = false;
-          }, 800);
+          setTimeout(() => this.isAnimating = false, 800);
         }
       }
 
@@ -480,10 +472,7 @@
           this.currentPageIndex--;
           this.updatePageDisplay();
           this.updateNavigationButtons();
-          
-          setTimeout(() => {
-            this.isAnimating = false;
-          }, 800);
+          setTimeout(() => this.isAnimating = false, 800);
         }
       }
 
@@ -493,10 +482,7 @@
           this.currentPageIndex = index;
           this.updatePageDisplay();
           this.updateNavigationButtons();
-          
-          setTimeout(() => {
-            this.isAnimating = false;
-          }, 800);
+          setTimeout(() => this.isAnimating = false, 800);
         }
       }
     }
@@ -512,7 +498,6 @@
       "https://i.postimg.cc/90gddJ2m/8.png"
     ];
 
-    // Initialize FlipBook
     document.addEventListener('DOMContentLoaded', () => {
       new FlipBook('book', 'prevBtn', 'nextBtn', menuImages);
     });
