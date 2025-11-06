@@ -166,11 +166,12 @@
       position: absolute;
       inset: 0;
       transform-origin: left center;
+      /* ✅ CSS transition က 0.8s ဖြစ်လို့ JS မှာ 800ms နဲ့ ကိုက်ရပါမယ် */
       transition: transform 0.8s cubic-bezier(0.45, 0.02, 0.35, 1);
       border-radius: 8px;
       overflow: hidden;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), 0 0 3px rgba(0,0,0,0.1);
-      backface-visibility: hidden;
+      backface-visibility: hidden; /* <-- This is the cause */
       display: flex;
       justify-content: center;
       align-items: center;
@@ -416,13 +417,9 @@
 
         this.book.addEventListener('touchmove', (e) => {
           if (e.touches.length > 1 || this.isAnimating) return;
-
-          // A valid touchstart must have happened first
           if (this.startX === 0 && this.startY === 0) return;
-
           const diffX = e.touches[0].clientX - this.startX;
           const diffY = e.touches[0].clientY - this.startY;
-
           if (!this.isSwiping) {
             if (Math.abs(diffX) > Math.abs(diffY)) {
               this.isSwiping = true;
@@ -430,31 +427,25 @@
               return; // It's a vertical scroll
             }
           }
-
           if (this.isSwiping) {
-            e.preventDefault(); // Prevent vertical scroll *only if* horizontal swipe
+            e.preventDefault(); 
           }
         }, { passive: false });
 
         this.book.addEventListener('touchend', (e) => {
           if (!this.isSwiping || this.isAnimating) {
             this.isSwiping = false;
-            // Reset start points
             this.startX = 0;
             this.startY = 0;
             return;
           }
-
           const endX = e.changedTouches[0].clientX;
           const diffX = endX - this.startX;
-
           if (Math.abs(diffX) > this.swipeThreshold) {
             if (diffX < 0) this.goToNextPage(); // Swipe Left
             else this.goToPrevPage();         // Swipe Right
           }
-          
           this.isSwiping = false;
-          // Reset start points
           this.startX = 0;
           this.startY = 0;
         });
@@ -469,16 +460,12 @@
         
         const select = document.getElementById('menuSelect');
         if (select) {
-            // This syncs the select box to the current page index
-            // Index 0 -> value "0" (Choose Section)
-            // Index 1 -> value "1" (Cocktails)
             select.value = this.currentPageIndex;
         }
       }
 
       updateNavigationButtons() {
         this.prevBtn.disabled = this.currentPageIndex === 0;
-        // The last page is at index (length - 1)
         this.nextBtn.disabled = this.currentPageIndex === this.pages.length - 1; 
       }
 
@@ -488,34 +475,64 @@
           this.currentPageIndex++;
           this.updatePageDisplay();
           this.updateNavigationButtons();
-          setTimeout(() => this.isAnimating = false, 700);
+          // ✅ FIXED: Timeout ကို CSS transition (0.8s) နဲ့ ကိုက်အောင် 800ms ပြောင်း
+          setTimeout(() => this.isAnimating = false, 800);
         }
       }
 
       goToPrevPage() {
         if (this.currentPageIndex > 0 && !this.isAnimating) {
           this.isAnimating = true;
+          
+          // ✅ THE FIX: အနောက်ပြန်ပိတ်မယ့် စာမျက်နှာကို ကြိုယူထား
+          const unFlippingPage = this.pages[this.currentPageIndex - 1];
+          // ✅ FIX: ပိတ်နေတုန်းမှာ ဖောက်မမြင်ရအောင် backface ကို ခဏ 'visible' ပြောင်း
+          unFlippingPage.style.backfaceVisibility = 'visible';
+          
           this.currentPageIndex--;
           this.updatePageDisplay();
           this.updateNavigationButtons();
-          setTimeout(() => this.isAnimating = false, 700);
+          
+          // ✅ FIXED: Timeout ကို 800ms ပြောင်း
+          setTimeout(() => {
+            this.isAnimating = false;
+            // ✅ FIX: Animation ပြီးမှ CSS ကို မူလ 'hidden' ပြန်ထား
+            unFlippingPage.style.backfaceVisibility = 'hidden'; 
+          }, 800); 
         }
       }
 
       goToPage(index) {
-        if (index >= 0 && index < this.pages.length && !this.isAnimating) {
+        // ✅ ADDED: လက်ရှိ page ကို ထပ်မနှိပ်မိအောင် check လုပ်
+        if (index >= 0 && index < this.pages.length && !this.isAnimating && index !== this.currentPageIndex) {
           this.isAnimating = true;
+          
+          const pagesToReset = [];
+          // ✅ THE FIX: Select box ကနေ အနောက်ကို ကျော်ခွပြီး ပြန်ရွေးရင်
+          if (index < this.currentPageIndex) {
+            // "un-flip" ဖြစ်သွားမယ့် စာမျက်နှာတွေ အကုန်လုံးကို loop ပတ်
+            for (let i = index; i < this.currentPageIndex; i++) {
+              this.pages[i].style.backfaceVisibility = 'visible';
+              pagesToReset.push(this.pages[i]);
+            }
+          }
+          
           this.currentPageIndex = index;
           this.updatePageDisplay();
           this.updateNavigationButtons();
-          setTimeout(() => this.isAnimating = false, 700);
+
+          // ✅ FIXED: Timeout ကို 800ms ပြောင်း
+          setTimeout(() => {
+            this.isAnimating = false;
+            // ✅ FIX: un-flip လုပ်ခဲ့သမျှ page တွေကို style ပြန် reset ချ
+            pagesToReset.forEach(page => page.style.backfaceVisibility = 'hidden');
+          }, 800); 
         }
       }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
       new FlipBook('book', 'prevBtn', 'nextBtn', [
-        // ✅ FIXED: Reverted to the original, correct image order.
         "https://i.postimg.cc/nLJ68qR5/1.png", // Index 0 (Cover)
         "https://i.postimg.cc/qq1kqjFY/2.png", // Index 1 (Cocktails)
         "https://i.postimg.cc/90LW0Jk6/3.png", // Index 2 (Beers)
