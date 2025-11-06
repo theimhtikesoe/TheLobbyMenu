@@ -60,6 +60,48 @@
     main.visible {
       opacity: 1;
     }
+    
+    /* 🔸 Top bar */
+.menu-topbar {
+  position: fixed;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(212, 175, 55, 0.25);
+  border: 2px solid var(--gold-dark);
+  border-radius: 50px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  padding: 8px 18px;
+  backdrop-filter: blur(8px);
+  z-index: 50;
+}
+
+/* 🔸 Selection box */
+.menu-topbar select {
+  border: none;
+  outline: none;
+  font-size: 18px;
+  border-radius: 50px;
+  padding: 10px 24px;
+  background: linear-gradient(135deg, #fff8dc, #fff5b0);
+  color: var(--text-color);
+  font-family: 'Georgia', serif;
+  cursor: pointer;
+  text-align-last: center;
+  font-weight: bold;
+  box-shadow: inset 0 0 8px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.menu-topbar select:hover {
+  background: linear-gradient(135deg, #fffbe0, #fff2a0);
+  transform: scale(1.05);
+  box-shadow: 0 0 12px rgba(212,175,55,0.5);
+}
 
     /* 🔸 Top bar */
     .menu-topbar {
