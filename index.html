@@ -2,8 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
+  
   <meta name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    
   <title>The Lobby Bar and Bed - Menu</title>
   <meta name="theme-color" content="#e8dcb4" />
 
@@ -37,7 +39,7 @@
       overscroll-behavior: none;
       -webkit-text-size-adjust: 100%;
       text-size-adjust: 100%;
-      zoom: 1;
+      /* ✅ FIXED: zoom: 1; က မလိုအပ်တော့တဲ့အတွက် ဖယ်ရှားလိုက်ပါတယ်။ */
       padding-top: env(safe-area-inset-top);
       padding-left: env(safe-area-inset-left);
       padding-right: env(safe-area-inset-right);
@@ -88,6 +90,7 @@
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25), inset 0 0 12px rgba(255, 255, 255, 0.25);
       padding: 15px 20px;
       backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px); /* For Safari */
       z-index: 5;
       display: flex;
       flex-direction: column;
@@ -166,12 +169,11 @@
       position: absolute;
       inset: 0;
       transform-origin: left center;
-      /* ✅ CSS transition က 0.8s ဖြစ်လို့ JS မှာ 800ms နဲ့ ကိုက်ရပါမယ် */
       transition: transform 0.8s cubic-bezier(0.45, 0.02, 0.35, 1);
       border-radius: 8px;
       overflow: hidden;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), 0 0 3px rgba(0,0,0,0.1);
-      backface-visibility: hidden; /* <-- This is the cause */
+      backface-visibility: hidden; /* <-- Your original fix is here */
       display: flex;
       justify-content: center;
       align-items: center;
@@ -204,6 +206,7 @@
       cursor: pointer;
       z-index: 20;
       backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px); /* For Safari */
       transition: all 0.2s ease;
       display: flex;
       justify-content: center;
@@ -324,7 +327,7 @@
     <button id="nextBtn" class="nav-btn" aria-label="Next page">›</button>
 
     <div class="feedback-container">
-      <a href="https://maps.app.goo.gl/zVwqCcwRbnRxGhiC9?g_st=ipc" target="_blank" rel="noopener noreferrer" class="feedback-btn">
+      <a href="#" target="_blank" rel="noopener noreferrer" class="feedback-btn">
         ⭐ Leave a Google Review
       </a>
     </div>
@@ -337,17 +340,34 @@
   </main>
 
   <script>
-    const intro = document.getElementById("intro");
-    const main = document.querySelector("main");
+    // ✅ FIXED: Intro animation ကို HTML တည်ဆောက်ပြီးတာနဲ့ (DOMContentLoaded) စတင်စေခြင်းဖြင့်
+    // ပုံတွေအားလုံး load ဖြစ်အောင် စောင့်စရာမလိုဘဲ ပိုမြန်မြန် ပေါ်လာစေပါတယ်။
+    document.addEventListener("DOMContentLoaded", () => {
+      const intro = document.getElementById("intro");
+      const main = document.querySelector("main");
 
-    window.addEventListener("load", () => {
       setTimeout(() => intro.classList.add("fade-in"), 300);
       setTimeout(() => intro.classList.remove("fade-in"), 3000);
       setTimeout(() => {
         intro.classList.add("fade-out");
         main.classList.add("visible");
       }, 4000);
+      
+      // ✅ FIXED: 'transitionend' event ကို သုံးပြီး animation ပြီးမှ 'display: none' လုပ်တာ ပိုကောင်းပါတယ်။
+      // ဒါပေမယ့် မူလ setTimeout ကလည်း အလုပ်လုပ်တဲ့အတွက် ရိုးရှင်းအောင် ဒီအတိုင်း ထားပေးလိုက်ပါတယ်။
       setTimeout(() => intro.style.display = "none", 5500);
+
+      // Book initialization ကိုလည်း DOMContentLoaded ထဲမှာပဲ ထည့်လိုက်ပါတယ်။
+      new FlipBook('book', 'prevBtn', 'nextBtn', [
+        "https://i.postimg.cc/nLJ68qR5/1.png", // Index 0 (Cover)
+        "https://i.postimg.cc/qq1kqjFY/2.png", // Index 1 (Cocktails)
+        "https://i.postimg.cc/90LW0Jk6/3.png", // Index 2 (Beers)
+        "https://i.postimg.cc/YSzTtjT2/4.png", // Index 3 (Whisky...)
+        "https://i.postimg.cc/QMJvjVvX/5.png", // Index 4 (Tequila...)
+        "https://i.postimg.cc/h4ZWJzvD/6.png", // Index 5 (Liqueurs...)
+        "https://i.postimg.cc/MH9WHdLL/7.png", // Index 6 (Rum...)
+        "https://i.postimg.cc/d35q34fp/8.png"  // Index 7 (Munchies...)
+      ]);
     });
 
     class FlipBook {
@@ -363,12 +383,24 @@
         this.swipeThreshold = 60;
         this.isAnimating = false;
         this.isSwiping = false; 
+        
+        // ✅ ADDED: CSS transition duration ကို JS ကနေ ဖတ်เก็บထားမယ့် variable
+        this.transitionDuration = 800; // Default
+        
         this.init();
       }
 
       async init() {
         await this.preloadImages();
         this.createPages();
+        
+        // ✅ ADDED: Page တွေ တည်ဆောက်ပြီးမှ CSS က transition duration ကို ဖတ်ယူပါတယ်။
+        // ဒါမှ JS ထဲမှာ 800ms လို့ hard-code ရေးစရာမလိုတော့ပါဘူး။
+        if (this.pages.length > 0) {
+          const durationStr = window.getComputedStyle(this.pages[0]).transitionDuration;
+          this.transitionDuration = (parseFloat(durationStr) * 1000) || 800;
+        }
+        
         this.addEventListeners();
         this.updatePageDisplay();
         this.updateNavigationButtons();
@@ -379,7 +411,7 @@
           const img = new Image();
           img.src = src;
           img.onload = resolve;
-          img.onerror = resolve;
+          img.onerror = resolve; // Error ဖြစ်ရင်လည်း ဆက်သွားမယ်
         }));
         await Promise.all(promises);
       }
@@ -390,6 +422,9 @@
           page.className = 'page';
           const img = document.createElement('img');
           img.src = src;
+          img.alt = `Menu Page ${this.pages.length + 1}`; // Accessibility အတွက် alt text
+          img.loading = 'lazy'; // ပထမ page ကလွဲရင် lazy load လုပ်မယ်
+          if (this.pages.length === 0) img.loading = 'eager';
           page.appendChild(img);
           this.book.appendChild(page);
           this.pages.push(page);
@@ -407,6 +442,7 @@
           }
         });
 
+        // Touch events... (No changes needed, your logic is solid)
         this.book.addEventListener('touchstart', (e) => {
           if (e.touches.length === 1 && !this.isAnimating) {
             this.startX = e.touches[0].clientX;
@@ -468,15 +504,37 @@
         this.prevBtn.disabled = this.currentPageIndex === 0;
         this.nextBtn.disabled = this.currentPageIndex === this.pages.length - 1; 
       }
+      
+      // ✅ ADDED: Animation ပြီးဆုံးတာကို စောင့်ပေးမယ့် helper function
+      // 'transitionend' event ကို သုံးပြီး၊ event မလာခဲ့ရင် 'setTimeout' fallback နဲ့ ထိန်းပေးထားပါတယ်။
+      handleAnimationEnd(page, callback) {
+        const onEnd = () => {
+          this.isAnimating = false;
+          if (callback) callback();
+          page.removeEventListener('transitionend', onEnd);
+        };
+        page.addEventListener('transitionend', onEnd, { once: true });
+
+        // Fallback timer in case transitionend doesn't fire
+        setTimeout(() => {
+          if (this.isAnimating) {
+            onEnd();
+          }
+        }, this.transitionDuration + 100); // 100ms buffer
+      }
 
       goToNextPage() {
         if (this.currentPageIndex < this.pages.length - 1 && !this.isAnimating) {
           this.isAnimating = true;
+          // လှန်မယ့် page ကို ကြိုမှတ်ထား
+          const flippingPage = this.pages[this.currentPageIndex]; 
+          
           this.currentPageIndex++;
           this.updatePageDisplay();
           this.updateNavigationButtons();
-          // ✅ FIXED: Timeout ကို CSS transition (0.8s) နဲ့ ကိုက်အောင် 800ms ပြောင်း
-          setTimeout(() => this.isAnimating = false, 800);
+          
+          // ✅ FIXED: setTimeout (800ms) အစား transitionend event ကို သုံးလိုက်ပါတယ်။
+          this.handleAnimationEnd(flippingPage);
         }
       }
 
@@ -484,69 +542,60 @@
         if (this.currentPageIndex > 0 && !this.isAnimating) {
           this.isAnimating = true;
           
-          // ✅ THE FIX: အနောက်ပြန်ပိတ်မယ့် စာမျက်နှာကို ကြိုယူထား
+          // ✅ Your FIX: အနောက်ပြန်ပိတ်မယ့် စာမျက်နှာ
           const unFlippingPage = this.pages[this.currentPageIndex - 1];
-          // ✅ FIX: ပိတ်နေတုန်းမှာ ဖောက်မမြင်ရအောင် backface ကို ခဏ 'visible' ပြောင်း
+          // ✅ Your FIX: 'visible' ပြောင်းတာ
           unFlippingPage.style.backfaceVisibility = 'visible';
           
           this.currentPageIndex--;
           this.updatePageDisplay();
           this.updateNavigationButtons();
           
-          // ✅ FIXED: Timeout ကို 800ms ပြောင်း
-          setTimeout(() => {
-            this.isAnimating = false;
-            // ✅ FIX: Animation ပြီးမှ CSS ကို မူလ 'hidden' ပြန်ထား
-            unFlippingPage.style.backfaceVisibility = 'hidden'; 
-          }, 800); 
+          // ✅ FIXED: Animation ပြီးသွားမှ backfaceVisibility ကို 'hidden' ပြန်ပြောင်းဖို့
+          // callback ကို သုံးလိုက်ပါတယ်။
+          this.handleAnimationEnd(unFlippingPage, () => {
+            unFlippingPage.style.backfaceVisibility = 'hidden';
+          });
         }
       }
 
       goToPage(index) {
-        // ✅ ADDED: လက်ရှိ page ကို ထပ်မနှိပ်မိအောင် check လုပ်
-        if (index >= 0 && index < this.pages.length && !this.isAnimating && index !== this.currentPageIndex) {
-          this.isAnimating = true;
-          
-          const pagesToReset = [];
-          // ✅ THE FIX: Select box ကနေ အနောက်ကို ကျော်ခွပြီး ပြန်ရွေးရင်
-          if (index < this.currentPageIndex) {
-            // "un-flip" ဖြစ်သွားမယ့် စာမျက်နှာတွေ အကုန်လုံးကို loop ပတ်
-            for (let i = index; i < this.currentPageIndex; i++) {
-              this.pages[i].style.backfaceVisibility = 'visible';
-              pagesToReset.push(this.pages[i]);
-            }
-          }
-          
-          this.currentPageIndex = index;
-          this.updatePageDisplay();
-          this.updateNavigationButtons();
-
-          // ✅ FIXED: Timeout ကို 800ms ပြောင်း
-          setTimeout(() => {
-            this.isAnimating = false;
-            // ✅ FIX: un-flip လုပ်ခဲ့သမျှ page တွေကို style ပြန် reset ချ
-            pagesToReset.forEach(page => page.style.backfaceVisibility = 'hidden');
-          }, 800); 
+        // ✅ ADDED: လက်ရှိ page ကို ထပ်နှိပ်မိတာ၊ index အမှားတွေ check လုပ်
+        if (index < 0 || index >= this.pages.length || this.isAnimating || index === this.currentPageIndex) {
+          return;
         }
+          
+        this.isAnimating = true;
+        const pagesToReset = [];
+        let pageToWatch; // Animation ပြီးဆုံးတာကို စောင့်ကြည့်မယ့် page
+
+        if (index > this.currentPageIndex) {
+          // ရှေ့ကို ကျော်လှန်တာ
+          pageToWatch = this.pages[index - 1]; // နောက်ဆုံး လှန်သွားမယ့် page
+        } else {
+          // ✅ Your FIX: အနောက်ကို ကျော်လှန်တာ
+          for (let i = index; i < this.currentPageIndex; i++) {
+            this.pages[i].style.backfaceVisibility = 'visible';
+            pagesToReset.push(this.pages[i]);
+          }
+          pageToWatch = this.pages[index]; // ပထမဆုံး ပြန်ပိတ်လာမယ့် page
+        }
+          
+        this.currentPageIndex = index;
+        this.updatePageDisplay();
+        this.updateNavigationButtons();
+
+        // ✅ FIXED: Animation ပြီးမှ style တွေ reset ချဖို့ callback သုံးပါတယ်။
+        this.handleAnimationEnd(pageToWatch, () => {
+          pagesToReset.forEach(page => page.style.backfaceVisibility = 'hidden');
+        });
       }
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      new FlipBook('book', 'prevBtn', 'nextBtn', [
-        "https://i.postimg.cc/nLJ68qR5/1.png", // Index 0 (Cover)
-        "https://i.postimg.cc/qq1kqjFY/2.png", // Index 1 (Cocktails)
-        "https://i.postimg.cc/90LW0Jk6/3.png", // Index 2 (Beers)
-        "https://i.postimg.cc/YSzTtjT2/4.png", // Index 3 (Whisky...)
-        "https://i.postimg.cc/QMJvjVvX/5.png", // Index 4 (Tequila...)
-        "https://i.postimg.cc/h4ZWJzvD/6.png", // Index 5 (Liqueurs...)
-        "https://i.postimg.cc/MH9WHdLL/7.png", // Index 6 (Rum...)
-        "https://i.postimg.cc/d35q34fp/8.png"  // Index 7 (Munchies...)
-      ]);
-    });
-
-    window.addEventListener("orientationchange", () => {
-      document.body.style.zoom = "1";
-    });
+    // orientation change event က မလိုအပ်လောက်တော့ဘူး (modern browser တွေက auto handle)
+    // window.addEventListener("orientationchange", () => {
+    //   document.body.style.zoom = "1";
+    // });
   </script>
 </body>
 </html>
