@@ -53,13 +53,23 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2rem;
+      /* ✅ FIXED: 2rem က zoom လုပ်ရင် ကြီးသွားတဲ့အတွက် 7.5vw ကို သုံးလိုက်ပါတယ်။ */
+      /* ဒါမှ screen width အလိုက်ပဲ font size က ပြောင်းပါတော့မယ်။ */
+      font-size: 7.5vw;
       font-weight: bold;
       color: var(--gold-dark);
       opacity: 0;
       transition: opacity 2s ease;
       z-index: 9999;
       pointer-events: none;
+      white-space: nowrap; /* ✅ ADDED: စာကြောင်းမကျိုးအောင် ထိန်းပေးပါတယ်။ */
+    }
+
+    /* ✅ ADDED: Screen ကြီးရင် 7.5vw က ကြီးလွန်းသွားမှာမို့ 2rem ကိုပဲ max အနေနဲ့ ထားပေးလိုက်ပါတယ်။ */
+    @media (min-width: 450px) {
+      #intro {
+        font-size: 2rem;
+      }
     }
 
     #intro.fade-in { opacity: 1; }
@@ -263,6 +273,11 @@
       margin-top: 10px;
       margin-bottom: 40px;
       animation: fadeUp 2s ease-in-out;
+    }
+    
+    /* ✅ ADDED: "The Lobby Bar and Bed" ဆိုတဲ့ <b> tag စာကြောင်းမကျိုးအောင် ထိန်းပေးပါတယ်။ */
+    .thankyou b {
+      white-space: nowrap;
     }
 
     @keyframes fadeUp {
