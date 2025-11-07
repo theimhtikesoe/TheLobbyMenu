@@ -52,15 +52,15 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      /* ✅ FINAL-FINAL FIX: 1.9rem က 100% မှာ ကြီးနေသေးလို့ 1.8rem ကို လျှော့လိုက်ပါတယ်။ */
-      font-size: 1.8rem;
+      /* ✅ FIX 1: 1.8rem က 100% မှာ ကြီးနေသေးလို့ 1.7rem ကို ထပ်လျှော့လိုက်ပါတယ်။ */
+      font-size: 1.7rem;
       font-weight: bold;
       color: var(--gold-dark);
       opacity: 0;
       transition: opacity 2s ease;
       z-index: 9999;
       pointer-events: none;
-      /* text zoom ချဲ့ရင် စာကြောင်းဆင်းအောင် white-space: nowrap; ကို ဖြုတ်ထားတာ မှန်ပါတယ်။ */
+      text-align: center; /* စာကို အလယ်ပို့ထားပါတယ် */
     }
 
     /* Screen ကြီးရင် (phone မဟုတ်ရင်) 2rem ပြန်ထားတာက မှန်ပါတယ်။ */
@@ -82,8 +82,8 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      /* padding-bottom (တတိယ value) ကို 40px ထပ်ပေါင်းထားတာ မှန်ပါတယ်။ */
-      padding: calc(20px + env(safe-area-inset-top)) 15px calc(40px + env(safe-area-inset-bottom)) 15px;
+      /* ✅ FIX 2: 40px က browser bar ကို မကျော်နိုင်လို့ 80px ကို တိုးလိုက်ပါတယ်။ */
+      padding: calc(20px + env(safe-area-inset-top)) 15px calc(80px + env(safe-area-inset-bottom)) 15px;
     }
 
     main.visible { opacity: 1; }
@@ -270,8 +270,7 @@
       color: var(--gold-dark);
       text-shadow: 0 1px 3px rgba(0,0,0,0.2);
       margin-top: 10px;
-      /* main padding နဲ့ ထပ်နေမှာစိုးလို့ 10px ပဲ ထားတာ မှန်ပါတယ်။ */
-      margin-bottom: 10px;
+      margin-bottom: 10px; /* main padding နဲ့ မထပ်အောင် 10px ပဲ ထားတာ မှန်ပါတယ်။ */
       animation: fadeUp 2s ease-in-out;
     }
     
