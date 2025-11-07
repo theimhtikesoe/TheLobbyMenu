@@ -52,17 +52,15 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      /* ✅ FINAL FIX: 'rem' ကို ပြန်သုံးမှ "AA" text zoom က အလုပ်လုပ်ပါမယ်။ */
-      /* 2rem က ကြီးတဲ့အတွက် 1.9rem ကို ပြောင်းလိုက်ပါတယ်။ */
-      font-size: 1.9rem;
+      /* ✅ FINAL-FINAL FIX: 1.9rem က 100% မှာ ကြီးနေသေးလို့ 1.8rem ကို လျှော့လိုက်ပါတယ်။ */
+      font-size: 1.8rem;
       font-weight: bold;
       color: var(--gold-dark);
       opacity: 0;
       transition: opacity 2s ease;
       z-index: 9999;
       pointer-events: none;
-      /* ✅ REMOVED: white-space: nowrap; ကို ဖြုတ်လိုက်ပါတယ်။ */
-      /* ဒါမှ text zoom ချဲ့လိုက်ရင် စာကြောင်းဆင်းလို့ ရပါမယ်။ */
+      /* text zoom ချဲ့ရင် စာကြောင်းဆင်းအောင် white-space: nowrap; ကို ဖြုတ်ထားတာ မှန်ပါတယ်။ */
     }
 
     /* Screen ကြီးရင် (phone မဟုတ်ရင်) 2rem ပြန်ထားတာက မှန်ပါတယ်။ */
