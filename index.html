@@ -367,7 +367,7 @@
         "https://i.postimg.cc/nLJ68qR5/1.png", // Index 0 (Cover)
         "https://i.postimg.cc/qq1kqjFY/2.png", // Index 1 (Cocktails)
         "https://i.postimg.cc/90LW0Jk6/3.png", // Index 2 (Beers)
-        "https://i.postimg.cc/YSzTtjT2/4.png", // Index 3 (Whisky...)
+        "https.i.postimg.cc/YSzTtjT2/4.png", // Index 3 (Whisky...)
         "https://i.postimg.cc/QMJvjVvX/5.png", // Index 4 (Tequila...)
         "https://i.postimg.cc/h4ZWJzvD/6.png", // Index 5 (Liqueurs...)
         "https://i.postimg.cc/MH9WHdLL/7.png", // Index 6 (Rum...)
@@ -458,7 +458,8 @@
           const diffY = e.touches[0].clientY - this.startY;
           if (!this.isSwiping) {
             if (Math.abs(diffX) > Math.abs(diffY)) {
-              this.isSwipting = true;
+              // ✅ FIXED: 'isSwipting' (မှား) aစား 'isSwiping' (မှန်) ကို ပြင်လိုက်ပါပြီ
+              this.isSwiping = true;
             } else {
               return; 
             }
