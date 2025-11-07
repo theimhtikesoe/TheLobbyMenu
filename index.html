@@ -52,7 +52,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      /* ✅ FIX 1: 1.7rem ကြီးနေသေးလို့ 1.65rem ကို ထပ်လျှော့ပါတယ်။ */
       font-size: 1.65rem;
       font-weight: bold;
       color: var(--gold-dark);
@@ -60,10 +59,9 @@
       transition: opacity 2s ease;
       z-index: 9999;
       pointer-events: none;
-      text-align: center; /* စာကို အလယ်ပို့ထားပါတယ် */
+      text-align: center; 
     }
 
-    /* Screen ကြီးရင် (phone မဟုတ်ရင်) 2rem ပြန်ထားတာက မှန်ပါတယ်။ */
     @media (min-width: 450px) {
       #intro {
         font-size: 2rem;
@@ -82,7 +80,6 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      /* ✅ FIX 2: 80px မလုံလောက်လို့ 120px ကို တိုးလိုက်ပါတယ်။ */
       padding: calc(20px + env(safe-area-inset-top)) 15px calc(120px + env(safe-area-inset-bottom)) 15px;
     }
 
@@ -270,7 +267,7 @@
       color: var(--gold-dark);
       text-shadow: 0 1px 3px rgba(0,0,0,0.2);
       margin-top: 10px;
-      margin-bottom: 10px; /* main padding နဲ့ မထပ်အောင် 10px ပဲ ထားတာ မှန်ပါတယ်။ */
+      margin-bottom: 10px;
       animation: fadeUp 2s ease-in-out;
     }
     
@@ -340,7 +337,7 @@
     <button id="nextBtn" class="nav-btn" aria-label="Next page">›</button>
 
     <div class="feedback-container">
-      <a href="#" target="_blank" rel="noopener noreferrer" class="feedback-btn">
+      <a href="https://maps.app.goo.gl/GKhirmmndwfhRvDz6?g_st=ipc" target="_blank" rel="noopener noreferrer" class="feedback-btn">
         ⭐ Leave a Google Review
       </a>
     </div>
@@ -353,7 +350,6 @@
   </main>
 
   <script>
-    // ... (your JavaScript is unchanged and correct) ...
     document.addEventListener("DOMContentLoaded", () => {
       const intro = document.getElementById("intro");
       const main = document.querySelector("main");
@@ -462,7 +458,7 @@
           const diffY = e.touches[0].clientY - this.startY;
           if (!this.isSwiping) {
             if (Math.abs(diffX) > Math.abs(diffY)) {
-              this.isSwiping = true;
+              this.isSwipting = true;
             } else {
               return; 
             }
