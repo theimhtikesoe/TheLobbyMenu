@@ -52,8 +52,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      /* ✅ FIX 1: 1.8rem က 100% မှာ ကြီးနေသေးလို့ 1.7rem ကို ထပ်လျှော့လိုက်ပါတယ်။ */
-      font-size: 1.7rem;
+      /* ✅ FIX 1: 1.7rem ကြီးနေသေးလို့ 1.65rem ကို ထပ်လျှော့ပါတယ်။ */
+      font-size: 1.65rem;
       font-weight: bold;
       color: var(--gold-dark);
       opacity: 0;
@@ -82,8 +82,8 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      /* ✅ FIX 2: 40px က browser bar ကို မကျော်နိုင်လို့ 80px ကို တိုးလိုက်ပါတယ်။ */
-      padding: calc(20px + env(safe-area-inset-top)) 15px calc(80px + env(safe-area-inset-bottom)) 15px;
+      /* ✅ FIX 2: 80px မလုံလောက်လို့ 120px ကို တိုးလိုက်ပါတယ်။ */
+      padding: calc(20px + env(safe-area-inset-top)) 15px calc(120px + env(safe-area-inset-bottom)) 15px;
     }
 
     main.visible { opacity: 1; }
