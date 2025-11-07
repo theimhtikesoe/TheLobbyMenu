@@ -52,18 +52,20 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      /* ✅ 1ST FIX: 7.5vw က 'D' အစွန်းလေး ပြတ်နေလို့ 7.3vw ကို ပြန်လျှော့လိုက်ပါတယ်။ */
-      font-size: 7.3vw;
+      /* ✅ FINAL FIX: 'rem' ကို ပြန်သုံးမှ "AA" text zoom က အလုပ်လုပ်ပါမယ်။ */
+      /* 2rem က ကြီးတဲ့အတွက် 1.9rem ကို ပြောင်းလိုက်ပါတယ်။ */
+      font-size: 1.9rem;
       font-weight: bold;
       color: var(--gold-dark);
       opacity: 0;
       transition: opacity 2s ease;
       z-index: 9999;
       pointer-events: none;
-      white-space: nowrap; 
+      /* ✅ REMOVED: white-space: nowrap; ကို ဖြုတ်လိုက်ပါတယ်။ */
+      /* ဒါမှ text zoom ချဲ့လိုက်ရင် စာကြောင်းဆင်းလို့ ရပါမယ်။ */
     }
 
-    /* Screen ကြီးရင် 7.3vw က ကြီးလွန်းသွားမှာမို့ 2rem ကိုပဲ max အနေနဲ့ ထားပေးလိုက်ပါတယ်။ */
+    /* Screen ကြီးရင် (phone မဟုတ်ရင်) 2rem ပြန်ထားတာက မှန်ပါတယ်။ */
     @media (min-width: 450px) {
       #intro {
         font-size: 2rem;
@@ -82,8 +84,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      /* ✅ 2ND FIX: padding-bottom (တတိယ value) ကို 40px ထပ်ပေါင်းလိုက်ပါတယ် */
-      /* ဒါမှ browser bar အောက်ကို စာ မရောက်တော့မှာပါ။ */
+      /* padding-bottom (တတိယ value) ကို 40px ထပ်ပေါင်းထားတာ မှန်ပါတယ်။ */
       padding: calc(20px + env(safe-area-inset-top)) 15px calc(40px + env(safe-area-inset-bottom)) 15px;
     }
 
@@ -271,7 +272,7 @@
       color: var(--gold-dark);
       text-shadow: 0 1px 3px rgba(0,0,0,0.2);
       margin-top: 10px;
-      /* ✅ 3RD FIX: main padding နဲ့ ထပ်နေမှာစိုးလို့ 10px ပဲ ထားလိုက်ပါတယ်။ */
+      /* main padding နဲ့ ထပ်နေမှာစိုးလို့ 10px ပဲ ထားတာ မှန်ပါတယ်။ */
       margin-bottom: 10px;
       animation: fadeUp 2s ease-in-out;
     }
@@ -293,8 +294,6 @@
 
     @media (min-width: 768px) {
       main {
-        /* Desktop အတွက် padding-bottom ပြန်ထိန်းညှိစရာမလိုပါဘူး */
-        /* 'calc(40px + env(safe-area-inset-bottom))' က desktop မှာ 40px ပဲ ဖြစ်နေမှာပါ။ */
         padding-left: 20px;
         padding-right: 20px;
       }
@@ -357,6 +356,7 @@
   </main>
 
   <script>
+    // ... (your JavaScript is unchanged and correct) ...
     document.addEventListener("DOMContentLoaded", () => {
       const intro = document.getElementById("intro");
       const main = document.querySelector("main");
