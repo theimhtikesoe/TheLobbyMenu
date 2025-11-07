@@ -39,7 +39,6 @@
       overscroll-behavior: none;
       -webkit-text-size-adjust: 100%;
       text-size-adjust: 100%;
-      /* ✅ FIXED: zoom: 1; က မလိုအပ်တော့တဲ့အတွက် ဖယ်ရှားလိုက်ပါတယ်။ */
       padding-top: env(safe-area-inset-top);
       padding-left: env(safe-area-inset-left);
       padding-right: env(safe-area-inset-right);
@@ -53,19 +52,18 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      /* ✅ FIXED: 2rem က zoom လုပ်ရင် ကြီးသွားတဲ့အတွက် 7.5vw ကို သုံးလိုက်ပါတယ်။ */
-      /* ဒါမှ screen width အလိုက်ပဲ font size က ပြောင်းပါတော့မယ်။ */
-      font-size: 7.5vw;
+      /* ✅ 1ST FIX: 7.5vw က 'D' အစွန်းလေး ပြတ်နေလို့ 7.3vw ကို ပြန်လျှော့လိုက်ပါတယ်။ */
+      font-size: 7.3vw;
       font-weight: bold;
       color: var(--gold-dark);
       opacity: 0;
       transition: opacity 2s ease;
       z-index: 9999;
       pointer-events: none;
-      white-space: nowrap; /* ✅ ADDED: စာကြောင်းမကျိုးအောင် ထိန်းပေးပါတယ်။ */
+      white-space: nowrap; 
     }
 
-    /* ✅ ADDED: Screen ကြီးရင် 7.5vw က ကြီးလွန်းသွားမှာမို့ 2rem ကိုပဲ max အနေနဲ့ ထားပေးလိုက်ပါတယ်။ */
+    /* Screen ကြီးရင် 7.3vw က ကြီးလွန်းသွားမှာမို့ 2rem ကိုပဲ max အနေနဲ့ ထားပေးလိုက်ပါတယ်။ */
     @media (min-width: 450px) {
       #intro {
         font-size: 2rem;
@@ -84,7 +82,9 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      padding: calc(20px + env(safe-area-inset-top)) 15px env(safe-area-inset-bottom) 15px;
+      /* ✅ 2ND FIX: padding-bottom (တတိယ value) ကို 40px ထပ်ပေါင်းလိုက်ပါတယ် */
+      /* ဒါမှ browser bar အောက်ကို စာ မရောက်တော့မှာပါ။ */
+      padding: calc(20px + env(safe-area-inset-top)) 15px calc(40px + env(safe-area-inset-bottom)) 15px;
     }
 
     main.visible { opacity: 1; }
@@ -183,7 +183,7 @@
       border-radius: 8px;
       overflow: hidden;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), 0 0 3px rgba(0,0,0,0.1);
-      backface-visibility: hidden; /* <-- Your original fix is here */
+      backface-visibility: hidden; 
       display: flex;
       justify-content: center;
       align-items: center;
@@ -271,11 +271,11 @@
       color: var(--gold-dark);
       text-shadow: 0 1px 3px rgba(0,0,0,0.2);
       margin-top: 10px;
-      margin-bottom: 40px;
+      /* ✅ 3RD FIX: main padding နဲ့ ထပ်နေမှာစိုးလို့ 10px ပဲ ထားလိုက်ပါတယ်။ */
+      margin-bottom: 10px;
       animation: fadeUp 2s ease-in-out;
     }
     
-    /* ✅ ADDED: "The Lobby Bar and Bed" ဆိုတဲ့ <b> tag စာကြောင်းမကျိုးအောင် ထိန်းပေးပါတယ်။ */
     .thankyou b {
       white-space: nowrap;
     }
@@ -293,6 +293,8 @@
 
     @media (min-width: 768px) {
       main {
+        /* Desktop အတွက် padding-bottom ပြန်ထိန်းညှိစရာမလိုပါဘူး */
+        /* 'calc(40px + env(safe-area-inset-bottom))' က desktop မှာ 40px ပဲ ဖြစ်နေမှာပါ။ */
         padding-left: 20px;
         padding-right: 20px;
       }
@@ -355,8 +357,6 @@
   </main>
 
   <script>
-    // ✅ FIXED: Intro animation ကို HTML တည်ဆောက်ပြီးတာနဲ့ (DOMContentLoaded) စတင်စေခြင်းဖြင့်
-    // ပုံတွေအားလုံး load ဖြစ်အောင် စောင့်စရာမလိုဘဲ ပိုမြန်မြန် ပေါ်လာစေပါတယ်။
     document.addEventListener("DOMContentLoaded", () => {
       const intro = document.getElementById("intro");
       const main = document.querySelector("main");
@@ -368,11 +368,8 @@
         main.classList.add("visible");
       }, 4000);
       
-      // ✅ FIXED: 'transitionend' event ကို သုံးပြီး animation ပြီးမှ 'display: none' လုပ်တာ ပိုကောင်းပါတယ်။
-      // ဒါပေမယ့် မူလ setTimeout ကလည်း အလုပ်လုပ်တဲ့အတွက် ရိုးရှင်းအောင် ဒီအတိုင်း ထားပေးလိုက်ပါတယ်။
       setTimeout(() => intro.style.display = "none", 5500);
 
-      // Book initialization ကိုလည်း DOMContentLoaded ထဲမှာပဲ ထည့်လိုက်ပါတယ်။
       new FlipBook('book', 'prevBtn', 'nextBtn', [
         "https://i.postimg.cc/nLJ68qR5/1.png", // Index 0 (Cover)
         "https://i.postimg.cc/qq1kqjFY/2.png", // Index 1 (Cocktails)
@@ -398,9 +395,7 @@
         this.swipeThreshold = 60;
         this.isAnimating = false;
         this.isSwiping = false; 
-        
-        // ✅ ADDED: CSS transition duration ကို JS ကနေ ဖတ်เก็บထားမယ့် variable
-        this.transitionDuration = 800; // Default
+        this.transitionDuration = 800; 
         
         this.init();
       }
@@ -409,8 +404,6 @@
         await this.preloadImages();
         this.createPages();
         
-        // ✅ ADDED: Page တွေ တည်ဆောက်ပြီးမှ CSS က transition duration ကို ဖတ်ယူပါတယ်။
-        // ဒါမှ JS ထဲမှာ 800ms လို့ hard-code ရေးစရာမလိုတော့ပါဘူး။
         if (this.pages.length > 0) {
           const durationStr = window.getComputedStyle(this.pages[0]).transitionDuration;
           this.transitionDuration = (parseFloat(durationStr) * 1000) || 800;
@@ -426,7 +419,7 @@
           const img = new Image();
           img.src = src;
           img.onload = resolve;
-          img.onerror = resolve; // Error ဖြစ်ရင်လည်း ဆက်သွားမယ်
+          img.onerror = resolve; 
         }));
         await Promise.all(promises);
       }
@@ -437,8 +430,8 @@
           page.className = 'page';
           const img = document.createElement('img');
           img.src = src;
-          img.alt = `Menu Page ${this.pages.length + 1}`; // Accessibility အတွက် alt text
-          img.loading = 'lazy'; // ပထမ page ကလွဲရင် lazy load လုပ်မယ်
+          img.alt = `Menu Page ${this.pages.length + 1}`; 
+          img.loading = 'lazy'; 
           if (this.pages.length === 0) img.loading = 'eager';
           page.appendChild(img);
           this.book.appendChild(page);
@@ -457,7 +450,6 @@
           }
         });
 
-        // Touch events... (No changes needed, your logic is solid)
         this.book.addEventListener('touchstart', (e) => {
           if (e.touches.length === 1 && !this.isAnimating) {
             this.startX = e.touches[0].clientX;
@@ -475,7 +467,7 @@
             if (Math.abs(diffX) > Math.abs(diffY)) {
               this.isSwiping = true;
             } else {
-              return; // It's a vertical scroll
+              return; 
             }
           }
           if (this.isSwiping) {
@@ -493,8 +485,8 @@
           const endX = e.changedTouches[0].clientX;
           const diffX = endX - this.startX;
           if (Math.abs(diffX) > this.swipeThreshold) {
-            if (diffX < 0) this.goToNextPage(); // Swipe Left
-            else this.goToPrevPage();         // Swipe Right
+            if (diffX < 0) this.goToNextPage(); 
+            else this.goToPrevPage();         
           }
           this.isSwiping = false;
           this.startX = 0;
@@ -520,8 +512,6 @@
         this.nextBtn.disabled = this.currentPageIndex === this.pages.length - 1; 
       }
       
-      // ✅ ADDED: Animation ပြီးဆုံးတာကို စောင့်ပေးမယ့် helper function
-      // 'transitionend' event ကို သုံးပြီး၊ event မလာခဲ့ရင် 'setTimeout' fallback နဲ့ ထိန်းပေးထားပါတယ်။
       handleAnimationEnd(page, callback) {
         const onEnd = () => {
           this.isAnimating = false;
@@ -530,25 +520,22 @@
         };
         page.addEventListener('transitionend', onEnd, { once: true });
 
-        // Fallback timer in case transitionend doesn't fire
         setTimeout(() => {
           if (this.isAnimating) {
             onEnd();
           }
-        }, this.transitionDuration + 100); // 100ms buffer
+        }, this.transitionDuration + 100); 
       }
 
       goToNextPage() {
         if (this.currentPageIndex < this.pages.length - 1 && !this.isAnimating) {
           this.isAnimating = true;
-          // လှန်မယ့် page ကို ကြိုမှတ်ထား
           const flippingPage = this.pages[this.currentPageIndex]; 
           
           this.currentPageIndex++;
           this.updatePageDisplay();
           this.updateNavigationButtons();
           
-          // ✅ FIXED: setTimeout (800ms) အစား transitionend event ကို သုံးလိုက်ပါတယ်။
           this.handleAnimationEnd(flippingPage);
         }
       }
@@ -557,17 +544,13 @@
         if (this.currentPageIndex > 0 && !this.isAnimating) {
           this.isAnimating = true;
           
-          // ✅ Your FIX: အနောက်ပြန်ပိတ်မယ့် စာမျက်နှာ
           const unFlippingPage = this.pages[this.currentPageIndex - 1];
-          // ✅ Your FIX: 'visible' ပြောင်းတာ
           unFlippingPage.style.backfaceVisibility = 'visible';
           
           this.currentPageIndex--;
           this.updatePageDisplay();
           this.updateNavigationButtons();
           
-          // ✅ FIXED: Animation ပြီးသွားမှ backfaceVisibility ကို 'hidden' ပြန်ပြောင်းဖို့
-          // callback ကို သုံးလိုက်ပါတယ်။
           this.handleAnimationEnd(unFlippingPage, () => {
             unFlippingPage.style.backfaceVisibility = 'hidden';
           });
@@ -575,42 +558,33 @@
       }
 
       goToPage(index) {
-        // ✅ ADDED: လက်ရှိ page ကို ထပ်နှိပ်မိတာ၊ index အမှားတွေ check လုပ်
         if (index < 0 || index >= this.pages.length || this.isAnimating || index === this.currentPageIndex) {
           return;
         }
           
         this.isAnimating = true;
         const pagesToReset = [];
-        let pageToWatch; // Animation ပြီးဆုံးတာကို စောင့်ကြည့်မယ့် page
+        let pageToWatch; 
 
         if (index > this.currentPageIndex) {
-          // ရှေ့ကို ကျော်လှန်တာ
-          pageToWatch = this.pages[index - 1]; // နောက်ဆုံး လှန်သွားမယ့် page
+          pageToWatch = this.pages[index - 1]; 
         } else {
-          // ✅ Your FIX: အနောက်ကို ကျော်လှန်တာ
           for (let i = index; i < this.currentPageIndex; i++) {
             this.pages[i].style.backfaceVisibility = 'visible';
             pagesToReset.push(this.pages[i]);
           }
-          pageToWatch = this.pages[index]; // ပထမဆုံး ပြန်ပိတ်လာမယ့် page
+          pageToWatch = this.pages[index]; 
         }
           
         this.currentPageIndex = index;
         this.updatePageDisplay();
         this.updateNavigationButtons();
 
-        // ✅ FIXED: Animation ပြီးမှ style တွေ reset ချဖို့ callback သုံးပါတယ်။
         this.handleAnimationEnd(pageToWatch, () => {
           pagesToReset.forEach(page => page.style.backfaceVisibility = 'hidden');
         });
       }
     }
-
-    // orientation change event က မလိုအပ်လောက်တော့ဘူး (modern browser တွေက auto handle)
-    // window.addEventListener("orientationchange", () => {
-    //   document.body.style.zoom = "1";
-    // });
   </script>
 </body>
 </html>
